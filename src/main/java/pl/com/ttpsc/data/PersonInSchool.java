@@ -1,10 +1,8 @@
 package pl.com.ttpsc.data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
-@XmlRootElement (name = "Person in school")
+@XmlRootElement(name = "Person")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PersonInSchool {
 
@@ -12,7 +10,9 @@ public class PersonInSchool {
    private String surname;
    private String whoIs;
 
+   @XmlTransient
    private String login;
+   @XmlTransient
    private String password;
 
         public String getName () {
