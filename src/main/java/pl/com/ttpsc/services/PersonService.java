@@ -19,17 +19,17 @@ public class PersonService {
             personInSchool.setName(name);
             personInSchool.setSurname(surname);
             personInSchool.setWhoIs(whoIs);
-        ListOfPersonsInSchool.list.add(personInSchool);
+            ListOfPersonsInSchool.list.add(personInSchool);
             fileService.writeFileListOfPersons();
     }
 
     public boolean checkingIfPersonExists () {
         boolean checking = false;
 
-        System.out.println(DisplayService.enterData1);
+        System.out.println(DisplayService.ENTER_DATA_1);
         name = sc.nextLine();
 
-        System.out.println(DisplayService.enterData2);
+        System.out.println(DisplayService.ENTER_DATA_2);
         surname = sc.nextLine();
 
         List <PersonInSchool> list = fileService.readFileListOfPersons().getList();

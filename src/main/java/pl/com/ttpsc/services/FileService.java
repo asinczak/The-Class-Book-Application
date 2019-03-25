@@ -1,5 +1,6 @@
 package pl.com.ttpsc.services;
 
+import pl.com.ttpsc.data.ListOfClasses;
 import pl.com.ttpsc.data.ListOfPersonsInSchool;
 import pl.com.ttpsc.data.PersonInSchool;
 
@@ -23,7 +24,9 @@ public class FileService {
     }
 
     private static final String FILE_LIST_OF_PERSONS = "List_of_persons.xml";
+    private static final String FILE_LIST_OF_CLASSES = "List_of_classes.xml";
     File file = new File(FILE_LIST_OF_PERSONS);
+    File file1 = new File(FILE_LIST_OF_CLASSES);
 
     public void writeFileListOfPersons () {
 
@@ -57,6 +60,38 @@ public class FileService {
         }
 
         return personsInSchool;
+    }
+
+    public void writeFileListOfClasses () {
+
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ListOfClasses.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            marshaller.marshal(ListOfClasses.getInstance(), file1);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public ListOfClasses readFileListOfClasses () {
+
+        ListOfClasses listOfClasses = null;
+
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ListOfClasses.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+            listOfClasses = (ListOfClasses) unmarshaller.unmarshal(file1);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        return listOfClasses;
     }
 
 

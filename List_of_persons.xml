@@ -50,4 +50,88 @@
         <surname>Wiatr</surname>
         <whoIs>Guardian</whoIs>
     </Person>
+    <Person>
+        <name>Olga</name>
+        <surname>Koc</surname>
+        <whoIs>Guardian</whoIs>
+    </Person>
+    <Person>
+        <name>Jurek</name>
+        <surname>Wolny</surname>
+        <whoIs>Guardian</whoIs>
+    </Person>
+    <Person>
+        <name>Tomasz</name>
+        <surname>Piwo</surname>
+        <whoIs>Guardian</whoIs>
+    </Person>
+    <Person>
+        <name>Tomasz</name>
+        <surname>Wolny</surname>
+        <whoIs>Guardian</whoIs>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Karol</name>
+        <surname>Wielki</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Kamil Boski</assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Bożena</name>
+        <surname>Topola</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Kamil Boski</assignStudent>
+    </Person>
+    <Person>
+        <name>Tomasz</name>
+        <surname>Szybki</surname>
+        <whoIs>Student</whoIs>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Wojciech</name>
+        <surname>Prędki</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent></assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Dorota</name>
+        <surname>Szybka</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Tomasz Szybki</assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Dorota</name>
+        <surname>Wolna</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Tomasz Szybki</assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Bożena</name>
+        <surname>Waleczna</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Kamil Boski</assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Karolina</name>
+        <surname>Maj</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Kamil Boski</assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Maja</name>
+        <surname>Bluszcz</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Kamil Boski</assignStudent>
+    </Person>
+    <Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="guardian">
+        <name>Aleksander</name>
+        <surname>Wiatr</surname>
+        <whoIs>Guardian</whoIs>
+        <assignStudent>Kamil Boski</assignStudent>
+    </Person>
+    <Person>
+        <name>Tomasz</name>
+        <surname>Kot</surname>
+        <whoIs>Teacher</whoIs>
+    </Person>
 </List_of_persons>

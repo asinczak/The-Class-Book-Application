@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "Person")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso({Guardian.class})
 public class PersonInSchool {
 
    private String name;
@@ -54,6 +55,8 @@ public class PersonInSchool {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 
     @Override
     public String toString() {

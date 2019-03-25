@@ -1,10 +1,23 @@
 package pl.com.ttpsc.data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashMap;
+import java.util.Map;
 
-@XmlRootElement (name = "Student")
-@XmlAccessorType (XmlAccessType.FIELD)
 public class Student extends PersonInSchool {
+
+   private int grade;
+
+   Map<Subject, Integer> gradeBook = new HashMap<>();
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public Map<Subject, Integer> getGradeBook() {
+        return gradeBook;
+    }
 }

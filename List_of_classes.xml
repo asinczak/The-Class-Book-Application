@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<List_of_classes>
+    <School_Class>
+        <nameClass>English2</nameClass>
+        <teacher>Tomasz Kot</teacher>
+        <Student>Maja Paluch</Student>
+        <Student>Kamil Boski</Student>
+    </School_Class>
+</List_of_classes>

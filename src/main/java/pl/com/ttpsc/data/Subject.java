@@ -1,0 +1,6 @@
+package pl.com.ttpsc.data;
+
+public enum Subject {
+
+    MATHS, SCIENCE, BIOLOGY, PHYSICS, CHEMISTRY, GEOGREAPHY, HISTORY, PHYSICAL_EDUCATION, ART, MUSIC, ENHLISH
+}
