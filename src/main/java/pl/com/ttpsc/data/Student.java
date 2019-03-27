@@ -3,7 +3,7 @@ package pl.com.ttpsc.data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Student extends PersonInSchool {
+public class Student extends User {
 
    private int grade;
 

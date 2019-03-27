@@ -1,4 +1,4 @@
 package pl.com.ttpsc.data;
 
-public class Admin extends PersonInSchool {
+public class Admin extends User {
 }

@@ -1,6 +1,6 @@
 package pl.com.ttpsc.data;
 
-public class Principal extends PersonInSchool {
+public class Principal extends User {
 
 
 }

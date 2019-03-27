@@ -1,19 +1,13 @@
 package pl.com.ttpsc.data;
 
-import javax.xml.bind.annotation.*;
-
-@XmlRootElement(name = "Person")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Guardian.class})
-public class PersonInSchool {
+public class User {
 
    private String name;
    private String surname;
    private String whoIs;
 
-   @XmlTransient
+
    private String login;
-   @XmlTransient
    private String password;
 
         public String getName () {

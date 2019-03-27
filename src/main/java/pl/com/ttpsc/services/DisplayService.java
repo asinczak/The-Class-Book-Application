@@ -10,6 +10,7 @@ public class DisplayService {
     static final String ENTER_DATA_6 = "Please enter the name of TEACHER to assign :";
     static final String ENTER_DATA_7 = "Please enter the surname of TEACHER to assign :";
     static final String ENTER_DATA_8 = "Please enter the name of CLASS to assign student :";
+    static final String ENTER_DATA_9 = "Enter 1 for test :";
 
 
     static final String WORNING_STATEMENT_1 = "Person with such data already exists !";

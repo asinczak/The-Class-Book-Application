@@ -1,16 +1,11 @@
 package pl.com.ttpsc.services;
 
-import pl.com.ttpsc.data.Teacher;
+import pl.com.ttpsc.data.Roles;
 
-public class TeacherService extends PersonService {
+public class TeacherService extends UserService {
 
 
     public void createTeacher (){
-        if (!checkingIfPersonExists()){
-            Teacher teacher = new Teacher();
-            createPerson(teacher, DisplayService.TEACHER);
-        } else {
-            System.out.println(DisplayService.WORNING_STATEMENT_1);
-        }
+        UserService.addUserToTheDataBase(Roles.TEACHER);
     }
 }

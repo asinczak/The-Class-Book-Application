@@ -1,10 +1,6 @@
 package pl.com.ttpsc.data;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
-@XmlAccessorType (XmlAccessType.FIELD)
-public class Guardian extends PersonInSchool {
+public class Guardian extends User {
 
     private String assignStudent = "";
 
