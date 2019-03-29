@@ -37,7 +37,7 @@ public class MenuService {
 
                 case 1:
                     DisplayService displayService = new DisplayService();
-                    displayService.displayAllGradesOfStudent();
+                    displayService.displayAllStudentAbsences();
 
                     break;
 
