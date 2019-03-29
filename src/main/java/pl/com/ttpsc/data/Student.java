@@ -7,7 +7,7 @@ public class Student extends User {
 
    private int grade;
 
-   Map<Subject, Integer> gradeBook = new HashMap<>();
+   private Map<Subject, Integer> gradeBook = new HashMap<>();
 
     public int getGrade() {
         return grade;

@@ -30,14 +30,14 @@ public class MenuService {
         do {
 
             Scanner sc = new Scanner(System.in);
-            System.out.println(DisplayService.ENTER_DATA_9);
+            System.out.println(GeneralMessages_en.ENTER_DATA_9);
             int numberMenu = sc.nextInt();
 
             switch (numberMenu) {
 
                 case 1:
-                    GuardianService guardianService = new GuardianService();
-                    guardianService.createGuardian();
+                    DisplayService displayService = new DisplayService();
+                    displayService.displayAllGradesOfStudent();
 
                     break;
 
