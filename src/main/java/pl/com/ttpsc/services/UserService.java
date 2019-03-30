@@ -1,6 +1,5 @@
 package pl.com.ttpsc.services;
 import org.sqlite.SQLiteException;
-import pl.com.ttpsc.data.ClassNames;
 import pl.com.ttpsc.data.Roles;
 
 import java.sql.PreparedStatement;
@@ -10,15 +9,26 @@ import java.sql.SQLException;
 
 public class UserService {
 
+    private static UserService userService;
+
+    private UserService () {}
+
+    public static UserService getInstance() {
+        if (userService == null){
+            userService = new UserService();
+        }
+        return userService;
+    }
+
     static final String INSERT_USER = "INSERT INTO Users (Name, Surname, IdRole) VALUES (?, ?, ?)";
     static final String GET_ID_ROLE_FROM_ROLES = "SELECT Id FROM Roles WHERE RoleName = ?";
     static final String GET_ID_FROM_USER = "SELECT Id FROM Users WHERE Name = ? AND Surname = ?";
     static final String GET_ID_ROLE_FROM_USER = "SELECT IdRole FROM Users WHERE Name = ? AND Surname = ?";
     static final String GET_USER_NAME_SURNAME_FROM_USERS = "SELECT Name, Surname FROM Users WHERE Name = ? AND Surname = ?";
-    static final String GET_ID_FROM_CLASESS = "SELECT Id FROM Classes WHERE ClassName = ?";
+    static final String GET_ROLE_FROM_ROLES = "SELECT RoleName FROM Roles WHERE Id = ?";
 
 
-    public static void addUserToTheDataBase (Roles roles, String name, String surname) {
+    public void addUserToTheDataBase (Roles roles, String name, String surname) {
         String role = String.valueOf(roles);
         boolean checkingPerson = true;
 
@@ -47,7 +57,7 @@ public class UserService {
         } while (checkingPerson);
     }
 
-    public static int getRoleIdFromRoles(String role) throws SQLException {
+    public int getRoleIdFromRoles(String role) throws SQLException {
 
         int roleId = 0;
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_ID_ROLE_FROM_ROLES);
@@ -59,7 +69,7 @@ public class UserService {
         return roleId;
     }
 
-    public static int getIdFromUser (String userName, String userSurname) throws SQLException {
+    public int getIdFromUser (String userName, String userSurname) throws SQLException {
         PreparedStatement preparedStatement2 = MenuService.getInstance().connection.prepareStatement(GET_ID_FROM_USER);
         preparedStatement2.setString(1, userName);
         preparedStatement2.setString(2, userSurname);
@@ -72,7 +82,7 @@ public class UserService {
         return idUser;
     }
 
-    public static int getRoleIdFromUsers (String userName, String userSurname) throws SQLException {
+    public int getRoleIdFromUsers (String userName, String userSurname) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_ID_ROLE_FROM_USER);
         preparedStatement.setString(1, userName);
         preparedStatement.setString(2, userSurname);
@@ -85,7 +95,7 @@ public class UserService {
         return idUser;
     }
 
-    public static boolean checkingIfUserExists (String name, String surname) throws SQLException {
+    public boolean checkingIfUserExists (String name, String surname) throws SQLException {
         boolean checking;
         String nameFromDataBase = "";
         String surnameFromDataBase = "";
@@ -109,58 +119,15 @@ public class UserService {
         return checking;
     }
 
-    public static int getIdFromClasses (String className) throws SQLException {
+    public String getRoleNameFromRoles (int idRole) throws SQLException {
+        String roleName = "";
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_ROLE_FROM_ROLES);
+        preparedStatement.setInt(1, idRole);
 
-        int idFromClasses = 0;
-        if (ClassNames.ifValueExists(className)) {
-            PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_ID_FROM_CLASESS);
-            preparedStatement.setString(1, className);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                idFromClasses = resultSet.getInt("Id");
-            }
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            roleName = resultSet.getString("RoleName");
         }
-        return idFromClasses;
+        return roleName;
     }
-
-    public static boolean checkingIfIsStudent (String name, String surname) throws SQLException {
-        boolean checking;
-        String role = String.valueOf(Roles.STUDENT);
-        int roleId = getRoleIdFromRoles(role);
-        int roleIdUser = getRoleIdFromUsers(name, surname);
-        if (roleId == roleIdUser){
-            checking = true;
-        } else {
-            checking = false;
-        }
-        return checking;
-    }
-
-    public static boolean checkingIfIsTeacher (String name, String surname) throws SQLException {
-        boolean checking;
-        String role = String.valueOf(Roles.TEACHER);
-        int roleId = getRoleIdFromRoles(role);
-        int roleIdUser = getRoleIdFromUsers(name, surname);
-        if (roleId == roleIdUser){
-            checking = true;
-        }else {
-            checking = false;
-        }
-        return checking;
-    }
-
-    public static boolean checkingIfIsGuardian (String name, String surname) throws SQLException {
-        boolean checking;
-        String role = String.valueOf(Roles.GUARDIAN);
-        int roleId = getRoleIdFromRoles(role);
-        int roleIdUser = getRoleIdFromUsers(name, surname);
-        if (roleId == roleIdUser) {
-            checking = true;
-        } else {
-            checking = false;
-        }
-        return checking;
-    }
-
 }

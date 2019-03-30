@@ -1,12 +1,16 @@
 package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.Roles;
+import pl.com.ttpsc.data.Subject;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-public class StudentService extends UserService {
+public class StudentService {
 
     private static StudentService studentService;
 
@@ -20,11 +24,17 @@ public class StudentService extends UserService {
     }
 
     SubjectService subjectService = SubjectService.getInstance();
+    ClassService classService = ClassService.getInstance();
+    GuardianService guardianService = GuardianService.getInstance();
+    UserService userService = UserService.getInstance();
 
     static final String ASSIGN_STUDENT_TO_CLASS = "UPDATE Users SET IdClass = ? WHERE Name = ? AND Surname = ?";
     static final String INSERT_GRADE_TO_STUDENT = "INSERT INTO Subject_Grade (IdSubject, IdStudent, Grade) VALUES (?, ?, ?)";
     static final String UPDATE_STUDENT_GRADE = "UPDATE Subject_Grade SET Grade = ? WHERE IdSubject = ? AND IdStudent = ?";
     static final String ASSIGN_STUDENT_TO_GUARDIAN = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
+    private static String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
+    private static String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
+
 
     public void addStudentToDataBase () {
         Scanner scanner = new Scanner(System.in);
@@ -33,9 +43,8 @@ public class StudentService extends UserService {
 
         System.out.println(GeneralMessages_en.ENTER_DATA_2);
         String surname = scanner.nextLine();
-        UserService.addUserToTheDataBase(Roles.STUDENT, name, surname);
+        userService.addUserToTheDataBase(Roles.STUDENT, name, surname);
     }
-
 
     public void asignStudentToClass() {
         boolean whileGoes = true;
@@ -52,9 +61,9 @@ public class StudentService extends UserService {
             String className = scanner.nextLine();
 
             try {
-                if (UserService.checkingIfUserExists(studentName, studentSurname)) {
-                    if (UserService.checkingIfIsStudent(studentName, studentSurname)){
-                        int idClass = UserService.getIdFromClasses(className);
+                if (userService.checkingIfUserExists(studentName, studentSurname)) {
+                    if (checkingIfIsStudent(studentName, studentSurname)){
+                        int idClass = classService.getIdFromClasses(className);
                         if (idClass > 0) {
                             updateStudentAddClassId(idClass, studentName, studentSurname);
                             whileGoes = false;
@@ -100,12 +109,12 @@ public class StudentService extends UserService {
            grade = scanner.nextInt();
 
            try {
-               if (UserService.checkingIfUserExists(studentName, studentSurname)){
-                   if (UserService.checkingIfIsStudent(studentName, studentSurname)) {
+               if (userService.checkingIfUserExists(studentName, studentSurname)){
+                   if (checkingIfIsStudent(studentName, studentSurname)) {
                        if (grade > 0 & grade < 7) {
                            int idSubject = subjectService.getIdFromSubject(subject);
                            if (idSubject > 0) {
-                               int idStudent = UserService.getIdFromUser(studentName, studentSurname);
+                               int idStudent = userService.getIdFromUser(studentName, studentSurname);
                                insertGradeToStudent(idSubject, idStudent, grade);
                                checking = false;
                            } else {
@@ -155,12 +164,12 @@ public class StudentService extends UserService {
             grade = scanner.nextInt();
 
             try {
-                if (UserService.checkingIfUserExists(studentName, studentSurname)){
-                    if (UserService.checkingIfIsStudent(studentName, studentSurname)) {
+                if (userService.checkingIfUserExists(studentName, studentSurname)){
+                    if (checkingIfIsStudent(studentName, studentSurname)) {
                         if (grade > 0 & grade < 7) {
                             int idSubject = subjectService.getIdFromSubject(subject);
                             if (idSubject > 0) {
-                                int idStudent = UserService.getIdFromUser(studentName, studentSurname);
+                                int idStudent = userService.getIdFromUser(studentName, studentSurname);
                                 updateStudentGrade(grade, idSubject, idStudent);
                                 checking = false;
                             } else {
@@ -208,11 +217,11 @@ public class StudentService extends UserService {
             String studentSurname = scanner.nextLine();
 
             try {
-                if (UserService.checkingIfUserExists(guardianName, guardianSurname)){
-                    if (UserService.checkingIfIsGuardian(guardianName, guardianSurname)){
-                        if (UserService.checkingIfUserExists(studentName, studentSurname)){
-                            if (UserService.checkingIfIsStudent(studentName, studentSurname)){
-                                int idGuardian = UserService.getIdFromUser(guardianName, guardianSurname);
+                if (userService.checkingIfUserExists(guardianName, guardianSurname)){
+                    if (guardianService.checkingIfIsGuardian(guardianName, guardianSurname)){
+                        if (userService.checkingIfUserExists(studentName, studentSurname)){
+                            if (checkingIfIsStudent(studentName, studentSurname)){
+                                int idGuardian = userService.getIdFromUser(guardianName, guardianSurname);
                                 updateIdGuardian(idGuardian, studentName, studentSurname);
                                 checking = false;
                             } else {
@@ -255,9 +264,9 @@ public class StudentService extends UserService {
            String studentSurname = scanner.nextLine();
 
            try {
-               if (UserService.checkingIfUserExists(studentName, studentSurname)) {
-                   if (UserService.checkingIfIsStudent(studentName, studentSurname)) {
-                       idStudent = UserService.getIdFromUser(studentName, studentSurname);
+               if (userService.checkingIfUserExists(studentName, studentSurname)) {
+                   if (checkingIfIsStudent(studentName, studentSurname)) {
+                       idStudent = userService.getIdFromUser(studentName, studentSurname);
                        checking = false;
                    } else {
                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
@@ -270,5 +279,40 @@ public class StudentService extends UserService {
            }
        }while (checking);
         return idStudent;
+    }
+
+    public ResultSet getAllGradesOfStudent () throws SQLException {
+        int idStudent = pointTheStudent();
+
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELSECT_ALL_GRADES_OF_STUDENT);
+        preparedStatement.setInt(1, idStudent);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        return resultSet;
+    }
+
+    public ResultSet getAllStudentAbsences () throws SQLException {
+        int idStudent = pointTheStudent();
+
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_STUDENT_ABSENCES);
+        preparedStatement.setInt(1, idStudent);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        return resultSet;
+    }
+
+    public boolean checkingIfIsStudent (String name, String surname) throws SQLException {
+        boolean checking;
+        String role = String.valueOf(Roles.STUDENT);
+        int roleId = userService.getRoleIdFromRoles(role);
+        int roleIdUser = userService.getRoleIdFromUsers(name, surname);
+        if (roleId == roleIdUser){
+            checking = true;
+        } else {
+            checking = false;
+        }
+        return checking;
     }
 }

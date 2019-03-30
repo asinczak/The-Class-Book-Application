@@ -7,15 +7,19 @@ import java.util.Scanner;
 
 public class MenuService {
 
-    private static  final MenuService menuServisce = new MenuService();
+    private static MenuService menuServisce;
 
     private MenuService (){}
 
     public static MenuService getInstance(){
+        if (menuServisce == null){
+            menuServisce = new MenuService();
+        }
         return menuServisce;
     }
     boolean switchGoes = true;
 
+    DisplayService displayService = DisplayService.getInstance();
     Connection connection = null;
 
     public void displayMenu () {
@@ -36,8 +40,8 @@ public class MenuService {
             switch (numberMenu) {
 
                 case 1:
-                    DisplayService displayService = new DisplayService();
-                    displayService.displayAllStudentAbsences();
+
+                    displayService.displayAllClassesAtSchool();
 
                     break;
 

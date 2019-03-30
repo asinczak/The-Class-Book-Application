@@ -20,6 +20,9 @@ public class SubjectService {
         return subjectService;
     }
 
+    UserService userService = UserService.getInstance();
+    StudentService studentService = StudentService.getInstance();
+
     static final String GET_ID_FROM_SUBJECTS = "SELECT Id FROM Subjects WHERE SubjectName = ?";
     static final String INSERT_ABSENCE_FROM_SUBJECT = "INSERT INTO Absences (DateAbsence, IdStudent, IdSubject) " +
             "VALUES (?, ?, ?)";
@@ -60,11 +63,11 @@ public class SubjectService {
             String date = scanner.nextLine();
 
             try {
-                if (UserService.checkingIfUserExists(studentName, studentSurname)){
-                    if (UserService.checkingIfIsStudent(studentName, studentSurname)){
+                if (userService.checkingIfUserExists(studentName, studentSurname)){
+                    if (studentService.checkingIfIsStudent(studentName, studentSurname)){
                         int idSubject = getIdFromSubject(subject);
                         if (idSubject > 0){
-                            int idStudent = UserService.getIdFromUser(studentName, studentSurname);
+                            int idStudent = userService.getIdFromUser(studentName, studentSurname);
                             insertAbsenceFromSubject(date,idStudent, idSubject);
                             checking = false;
                         }else {

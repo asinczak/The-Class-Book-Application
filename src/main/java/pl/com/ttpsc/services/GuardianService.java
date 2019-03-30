@@ -7,9 +7,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class GuardianService extends UserService {
+public class GuardianService {
+
+    private static GuardianService guardianService;
+
+    private GuardianService () {}
+
+    public static GuardianService getInstance() {
+        if (guardianService == null){
+            guardianService = new GuardianService();
+        }
+        return guardianService;
+    }
 
    static final String INSERT_GUARDIAN_TO_STUDENT = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
+
+   StudentService studentService = StudentService.getInstance();
+   UserService userService = UserService.getInstance();
 
    String nameGuardian = "";
    String surnameGuardian = "";
@@ -34,10 +48,10 @@ public class GuardianService extends UserService {
             surnameStudent = sc.nextLine();
 
             try {
-                if(!UserService.checkingIfUserExists(nameGuardian, surnameGuardian)) {
-                    if (UserService.checkingIfUserExists(nameStudent, surnameStudent)) {
-                        if (UserService.checkingIfIsStudent(nameStudent, surnameStudent)) {
-                            UserService.addUserToTheDataBase(Roles.GUARDIAN, nameGuardian, surnameGuardian);
+                if(!userService.checkingIfUserExists(nameGuardian, surnameGuardian)) {
+                    if (userService.checkingIfUserExists(nameStudent, surnameStudent)) {
+                        if (studentService.checkingIfIsStudent(nameStudent, surnameStudent)) {
+                            userService.addUserToTheDataBase(Roles.GUARDIAN, nameGuardian, surnameGuardian);
                             insertGuardianToStudent();
                             checkingPerson = false;
                         } else {
@@ -64,11 +78,23 @@ public class GuardianService extends UserService {
 
     public void insertGuardianToStudent () throws SQLException {
         PreparedStatement preparedStatement3 = MenuService.getInstance().connection.prepareStatement(INSERT_GUARDIAN_TO_STUDENT);
-        preparedStatement3.setInt(1, UserService.getIdFromUser(nameGuardian, surnameGuardian));
+        preparedStatement3.setInt(1, userService.getIdFromUser(nameGuardian, surnameGuardian));
                 preparedStatement3.setString(2, nameStudent);
                 preparedStatement3.setString(3, surnameStudent);
         preparedStatement3.execute();
     }
 
+    public boolean checkingIfIsGuardian (String name, String surname) throws SQLException {
+        boolean checking;
+        String role = String.valueOf(Roles.GUARDIAN);
+        int roleId = userService.getRoleIdFromRoles(role);
+        int roleIdUser = userService.getRoleIdFromUsers(name, surname);
+        if (roleId == roleIdUser) {
+            checking = true;
+        } else {
+            checking = false;
+        }
+        return checking;
+    }
 
 }
