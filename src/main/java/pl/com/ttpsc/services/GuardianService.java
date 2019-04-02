@@ -1,6 +1,5 @@
 package pl.com.ttpsc.services;
 
-import org.sqlite.SQLiteException;
 import pl.com.ttpsc.data.Guardian;
 import pl.com.ttpsc.data.Roles;
 import pl.com.ttpsc.data.Student;
@@ -68,6 +67,7 @@ public class GuardianService {
                             insertGuardianToStudent();
                             int idUser = userService.getIdFromUser(nameGuardian, surnameGuardian);
                             userService.insertNewUserIntoLogon(nameGuardian, surnameGuardian, idUser);
+                            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
                             checkingPerson = false;
                         } else {
                             System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
@@ -160,7 +160,7 @@ public class GuardianService {
         preparedStatement.execute();
     }
 
-    public List <Student> assignListOfStudents (int idUser) throws SQLException {
+    public List <Student> getListOfStudents (int idUser) throws SQLException {
         List <Student> studentList = new ArrayList<>();
 
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_STUDENT_ASSSIGN_TO_GUARDIAN);

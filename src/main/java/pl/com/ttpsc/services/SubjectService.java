@@ -20,14 +20,12 @@ public class SubjectService {
         return subjectService;
     }
 
-
-
-
     static final String GET_ID_FROM_SUBJECTS = "SELECT Id FROM Subjects WHERE SubjectName = ?";
     static final String INSERT_ABSENCE_FROM_SUBJECT = "INSERT INTO Absences (DateAbsence, IdStudent, IdSubject) " +
             "VALUES (?, ?, ?)";
     static final String INSERT_NUMBER_OF_LESSONS_PER_YEAR = "UPDATE Subjects SET NumberOfLessons = ? WHERE SubjectName = ?";
     static final String GET_SUBJECT_FROM_ID = "SELECT SubjectName FROM Subjects WHERE Id = ?";
+    static final String GET_NUMBER_OF_LESSONS_FOR_SUBJECT = "SELECT NumberOfLessons FROM Subjects WHERE SubjectName = ?";
 
 
     public int getIdFromSubject (String subject) throws SQLException {
@@ -97,6 +95,18 @@ public class SubjectService {
         }
 
         return subject;
+    }
+
+    public int getNumberOfLessonsForSubject (String subject) throws SQLException {
+        int numberOfLessons = 0;
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_NUMBER_OF_LESSONS_FOR_SUBJECT);
+        preparedStatement.setString(1, subject);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            numberOfLessons = resultSet.getInt("NumberOfLessons");
+        }
+        return numberOfLessons;
     }
 }
 

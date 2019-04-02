@@ -1,7 +1,5 @@
 package pl.com.ttpsc.services;
 
-import pl.com.ttpsc.data.SettingsAfterLogon;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -50,7 +48,11 @@ public class MenuService {
 
                 case 1:
 
-                    guardianService.createGuardian();
+                    try {
+                        studentService.getMapOfAbsencesOfStudent(18);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
 
                     break;
 

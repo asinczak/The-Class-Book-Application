@@ -47,7 +47,7 @@ public class GeneralMessages_en {
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";
     static final String CORRECT_STATEMENT_2 = "Success! You' ve assigned the TEACHER.";
-    static final String CORRECT_STATEMENT_3 = "Success! You' ve sign in.";
+    static final String CORRECT_STATEMENT_3 = "Success! You' ve signed in.";
     static final String CORRECT_STATEMENT_4 = "Success! You' ve changed password.";
     static final String CORRECT_STATEMNET_5 = "Success!";
 

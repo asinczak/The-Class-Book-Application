@@ -6,9 +6,7 @@ import pl.com.ttpsc.data.Subject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class StudentService {
 
@@ -264,9 +262,7 @@ public class StudentService {
         return resultSet;
     }
 
-    public ResultSet getAllStudentAbsences () throws SQLException {
-        int idStudent = logonService.checkingWhoIsLogged();
-
+    public ResultSet getAllStudentAbsences (int idStudent) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_STUDENT_ABSENCES);
         preparedStatement.setInt(1, idStudent);
 
@@ -348,5 +344,29 @@ public class StudentService {
             }
         }
         return checking;
+    }
+
+    public Map<String, Integer> getMapOfAbsencesOfStudent (int idStudent) throws SQLException {
+        Map <String, Integer> map = new HashMap<>();
+        List <String> subjectList = new ArrayList<>();
+
+        ResultSet resultSet = getAllStudentAbsences(idStudent);
+        while (resultSet.next()){
+            int idSubject = resultSet.getInt("IdSubject");
+
+            String subject = subjectService.getSubjectFromId(idSubject);
+           subjectList.add(subject);
+        }
+        for (int i = 0; i<subjectList.size(); i++){
+            int counter = 0;
+            String subject = subjectList.get(i);
+            for (int y = 0; y<subjectList.size(); y++){
+                if (subject.equals(subjectList.get(y))){
+                    counter++;
+                }
+            }
+            map.put(subject, counter);
+        }
+        return map;
     }
 }
