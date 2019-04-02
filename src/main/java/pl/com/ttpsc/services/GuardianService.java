@@ -28,6 +28,7 @@ public class GuardianService {
     static final String INSERT_GUARDIAN_TO_STUDENT = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
     static final String ASSIGN_STUDENT_TO_GUARDIAN = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
     static final String SELECT_STUDENT_ASSSIGN_TO_GUARDIAN = "SELECT Name, Surname FROM Users WHERE IdGuardian = ?";
+    static final String SELECT_GRADES_FROM_ASSIGN_STUDENT = "SELECT C.SubjectName, D.Grade FROM Subjects AS C, Subject_Grade AS D WHERE C.Id = D.IdSubject AND D.IdStudent = ?";
 
    StudentService studentService = StudentService.getInstance();
    UserService userService = UserService.getInstance();
@@ -54,12 +55,19 @@ public class GuardianService {
             System.out.println(GeneralMessages_en.ENTER_DATA_4);
             surnameStudent = sc.nextLine();
 
+            nameGuardian = nameGuardian.substring(0,1).toUpperCase() + nameGuardian.substring(1).toLowerCase();
+            surnameGuardian = surnameGuardian.substring(0,1).toUpperCase() + surnameGuardian.substring(1).toLowerCase();
+            nameStudent = nameStudent.substring(0,1).toUpperCase() + nameStudent.substring(1).toLowerCase();
+            nameGuardian = nameGuardian.substring(0,1).toUpperCase() + nameGuardian.substring(1).toLowerCase();
+
             try {
                 if(!userService.checkingIfUserExists(nameGuardian, surnameGuardian)) {
                     if (userService.checkingIfUserExists(nameStudent, surnameStudent)) {
                         if (studentService.checkingIfIsStudent(nameStudent, surnameStudent)) {
                             userService.addUserToTheDataBase(Roles.GUARDIAN, nameGuardian, surnameGuardian);
                             insertGuardianToStudent();
+                            int idUser = userService.getIdFromUser(nameGuardian, surnameGuardian);
+                            userService.insertNewUserIntoLogon(nameGuardian, surnameGuardian, idUser);
                             checkingPerson = false;
                         } else {
                             System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
@@ -70,9 +78,6 @@ public class GuardianService {
                 } else {
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
                 }
-
-            }catch (SQLiteException e) {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
 
             } catch (SQLException e) {
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
@@ -172,9 +177,18 @@ public class GuardianService {
             Guardian guardian = new Guardian();
             guardian.setStudentList(studentList);
         }
-
         return studentList;
     }
+
+    public ResultSet selectGradesFromAssignStudent (int idStudent) throws SQLException {
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_GRADES_FROM_ASSIGN_STUDENT);
+        preparedStatement.setInt(1, idStudent);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet;
+    }
+
+
 
 
 }

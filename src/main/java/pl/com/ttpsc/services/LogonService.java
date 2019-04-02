@@ -30,6 +30,7 @@ public class LogonService {
     private static String UPDATE_PASSWORD = "UPDATE Logon SET Password = ? WHERE Login = ?";
     private static String SELECT_ID_USER_FORM_LOGON = "SELECT IdUser FROM Logon WHERE Login = ? AND Password = ?";
 
+
     public boolean checkingIfLogonIsCorrect (String login, String password) throws SQLException {
         boolean checking = false;
         map = getLoginAndPassword();
@@ -194,5 +195,16 @@ public class LogonService {
         }
         return idUser;
     }
+
+    public int checkingWhoIsLogged () {
+        int idUser = 0;
+        Map <Integer, String> map =  SettingsAfterLogon.map;
+        for (Integer key : map.keySet()){
+            idUser = key;
+        }
+        return idUser;
+    }
+
+
 
 }

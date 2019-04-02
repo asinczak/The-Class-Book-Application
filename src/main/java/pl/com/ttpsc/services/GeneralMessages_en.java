@@ -42,6 +42,7 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_7 = "Wrong data! There is no such subject";
     static final String WORNING_STATEMENT_8 = "Wrong grade! Try again";
     static final String WORNING_STATEMENT_9 = "Wrong data! Person in not a guardian";
+    static final String WORNING_STATEMENT_10 = "Wrong data! Student has already got such grade";
 
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";

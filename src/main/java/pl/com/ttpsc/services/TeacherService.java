@@ -27,13 +27,32 @@ public class TeacherService {
     static final String GET_TEACHER_FROM_ID = "SELECT Name, Surname FROM Users WHERE Id = ?";
 
     public void createTeacher (){
-        Scanner sc = new Scanner(System.in);
-        System.out.println(GeneralMessages_en.ENTER_DATA_1);
-        String name = sc.nextLine();
+        boolean checking = true;
 
-        System.out.println(GeneralMessages_en.ENTER_DATA_2);
-        String surname = sc.nextLine();
-        userService.addUserToTheDataBase(Roles.TEACHER, name, surname);
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_1);
+            String name = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_2);
+            String surname = scanner.nextLine();
+
+            name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+            surname = surname.substring(0,1).toUpperCase() + surname.substring(1).toLowerCase();
+
+            try {
+                if (userService.addUserToTheDataBase(Roles.TEACHER, name, surname)){
+                    System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+                    int idUser = userService.getIdFromUser(name, surname);
+                    userService.insertNewUserIntoLogon(name, surname, idUser);
+                    checking = false;
+                } else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } while (checking);
     }
 
     public void asssignTeacherToCless (){

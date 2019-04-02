@@ -27,6 +27,8 @@ public class DisplayService {
     UserConverter userConverter = UserConverter.getInstance();
     TeacherService teacherService = TeacherService.getInstance();
     GuardianService guardianService = GuardianService.getInstance();
+    LogonService logonService = LogonService.getInstance();
+    UserService userService = UserService.getInstance();
 
 
     public void displayAllGradesOfStudentForStudent () {
@@ -95,9 +97,36 @@ public class DisplayService {
             }
     }
 
-    public void displayAllGradesForStudentForGuardian () {
-        int idGuardian;
-        List <Student> studentList = guardianService.assignListOfStudents(idGuardian);
+    public void displayAllGradesOfStudentForGuardian () {
+        int idGuardian = logonService.checkingWhoIsLogged();
+        String studentName = "";
+        String studentSurname = "";
+        String subject = "";
+        int grade = 0;
+        try {
+            List <Student> studentList = guardianService.assignListOfStudents(idGuardian);
+            for (Student student : studentList){
+                studentName = student.getName();
+                studentSurname = student.getSurname();
+                System.out.println("______________________________________");
+                System.out.println("Student: " +studentName+" "+studentSurname);
+                int idStudent = userService.getIdFromUser(studentName,studentSurname);
+                ResultSet resultSet = guardianService.selectGradesFromAssignStudent(idStudent);
+                while (resultSet.next()){
+                    subject = resultSet.getString("SubjectName");
+                    grade = resultSet.getInt("Grade");
+
+                    System.out.println("Subject: " +subject + ", Grade: " +grade);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+
 
     }
 }

@@ -27,35 +27,24 @@ public class UserService {
     static final String GET_USER_NAME_SURNAME_FROM_USERS = "SELECT Name, Surname FROM Users WHERE Name = ? AND Surname = ?";
     static final String GET_ROLE_FROM_ROLES = "SELECT RoleName FROM Roles WHERE Id = ?";
     static final String GET_ID_ROLE_FROM_USER_ID = "SELECT IdRole FROM Users WHERE Id = ?";
+    private static String INSERT_NEW_USER_INTO_LOGON = "INSERT INTO Logon (Login, Password, IdUser) VALUES (?, ?, ?)";
 
 
-    public void addUserToTheDataBase (Roles roles, String name, String surname) {
+    public boolean addUserToTheDataBase (Roles roles, String name, String surname) throws SQLException {
         String role = String.valueOf(roles);
-        boolean checkingPerson = true;
+        boolean checkingPerson = false;
 
-        do {
-            try {
-                if (!checkingIfUserExists(name, surname)) {
+            if (!checkingIfUserExists(name, surname)) {
                     int roleId = getRoleIdFromRoles(role);
                     PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_USER);
                     preparedStatement.setString(1, name);
                     preparedStatement.setString(2, surname);
                     preparedStatement.setInt(3, roleId);
-
                     preparedStatement.execute();
-                    checkingPerson = false;
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
+
+                    checkingPerson = true;
                 }
-
-            }catch (SQLiteException e) {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        } while (checkingPerson);
+        return checkingPerson;
     }
 
     public int getRoleIdFromRoles(String role) throws SQLException {
@@ -143,4 +132,20 @@ public class UserService {
         }
         return idRole;
     }
+
+    public void insertNewUserIntoLogon (String name, String surname, int idUser) throws SQLException {
+        char firstFromName = name.charAt(0);
+        char secondFromName = name.charAt(1);
+        char firstFromSurname = surname.charAt(0);
+        char secondFromSurname = surname.charAt(1);
+        String login = "" + firstFromName + secondFromName + firstFromSurname + secondFromSurname + idUser;
+        String defaultPassword = "123";
+
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_NEW_USER_INTO_LOGON);
+        preparedStatement.setString(1, login);
+        preparedStatement.setString(2, defaultPassword);
+        preparedStatement.setInt(3, idUser);
+        preparedStatement.execute();
+    }
+
 }

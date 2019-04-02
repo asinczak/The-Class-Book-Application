@@ -26,22 +26,43 @@ public class StudentService {
     SubjectService subjectService = SubjectService.getInstance();
     ClassService classService = ClassService.getInstance();
     UserService userService = UserService.getInstance();
+    LogonService logonService = LogonService.getInstance();
 
     static final String ASSIGN_STUDENT_TO_CLASS = "UPDATE Users SET IdClass = ? WHERE Name = ? AND Surname = ?";
     static final String INSERT_GRADE_TO_STUDENT = "INSERT INTO Subject_Grade (IdSubject, IdStudent, Grade) VALUES (?, ?, ?)";
     static final String UPDATE_STUDENT_GRADE = "UPDATE Subject_Grade SET Grade = ? WHERE IdSubject = ? AND IdStudent = ?";
     static String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
     static String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
+    static String SELECT_SUBJECT_AND_GRADE_FOR_STUDENT = "SELECT IdSubject, Grade FROM Subject-Grade WHERE IdStudent = ?";
 
 
     public void addStudentToDataBase () {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(GeneralMessages_en.ENTER_DATA_1);
-        String name = scanner.nextLine();
+        boolean checking = true;
 
-        System.out.println(GeneralMessages_en.ENTER_DATA_2);
-        String surname = scanner.nextLine();
-        userService.addUserToTheDataBase(Roles.STUDENT, name, surname);
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_1);
+            String name = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_2);
+            String surname = scanner.nextLine();
+
+            name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+            surname = surname.substring(0,1).toUpperCase() + surname.substring(1).toLowerCase();
+
+            try {
+                if (userService.addUserToTheDataBase(Roles.STUDENT, name, surname)){
+                    System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+                    int idUser = userService.getIdFromUser(name, surname);
+                    userService.insertNewUserIntoLogon(name, surname, idUser);
+                    checking = false;
+                } else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } while (checking);
     }
 
     public void asignStudentToClass() {
@@ -113,8 +134,12 @@ public class StudentService {
                            int idSubject = subjectService.getIdFromSubject(subject);
                            if (idSubject > 0) {
                                int idStudent = userService.getIdFromUser(studentName, studentSurname);
-                               insertGradeToStudent(idSubject, idStudent, grade);
-                               checking = false;
+                                    if (!checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)) {
+                                        insertGradeToStudent(idSubject, idStudent, grade);
+                                        checking = false;
+                                    } else {
+                                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_10);
+                                    }
                            } else {
                                System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
                            }
@@ -229,7 +254,7 @@ public class StudentService {
     }
 
     public ResultSet getAllGradesOfStudent () throws SQLException {
-        int idStudent = pointTheStudent();
+        int idStudent = logonService.checkingWhoIsLogged();
 
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELSECT_ALL_GRADES_OF_STUDENT);
         preparedStatement.setInt(1, idStudent);
@@ -240,7 +265,7 @@ public class StudentService {
     }
 
     public ResultSet getAllStudentAbsences () throws SQLException {
-        int idStudent = pointTheStudent();
+        int idStudent = logonService.checkingWhoIsLogged();
 
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_STUDENT_ABSENCES);
         preparedStatement.setInt(1, idStudent);
@@ -309,4 +334,19 @@ public class StudentService {
     }
 
 
+    public  boolean checkingIfStudenthasSuchGrade (int idStudent, int grade, int idSubject) throws SQLException {
+        boolean checking = false;
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_SUBJECT_AND_GRADE_FOR_STUDENT);
+        preparedStatement.setInt(1, idStudent);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            int idSubjectFromBase = resultSet.getInt("IdSubject");
+            int gradeFromBase = resultSet.getInt("Grade");
+            if (idSubject == idSubjectFromBase & grade == gradeFromBase){
+                checking = true;
+            }
+        }
+        return checking;
+    }
 }

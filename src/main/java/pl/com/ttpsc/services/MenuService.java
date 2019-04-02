@@ -26,6 +26,7 @@ public class MenuService {
     SubjectService subjectService = SubjectService.getInstance();
     StudentService studentService = StudentService.getInstance();
     SettingService settingService = SettingService.getInstance();
+    GuardianService guardianService = GuardianService.getInstance();
 
     Connection connection = null;
     boolean switchGoes = true;
@@ -49,8 +50,7 @@ public class MenuService {
 
                 case 1:
 
-                    logonService.logging();
-
+                    guardianService.createGuardian();
 
                     break;
 
