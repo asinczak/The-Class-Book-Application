@@ -1,10 +1,15 @@
 package pl.com.ttpsc.services;
 
 import org.sqlite.SQLiteException;
+import pl.com.ttpsc.data.Guardian;
 import pl.com.ttpsc.data.Roles;
+import pl.com.ttpsc.data.Student;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GuardianService {
@@ -20,7 +25,9 @@ public class GuardianService {
         return guardianService;
     }
 
-   static final String INSERT_GUARDIAN_TO_STUDENT = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
+    static final String INSERT_GUARDIAN_TO_STUDENT = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
+    static final String ASSIGN_STUDENT_TO_GUARDIAN = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
+    static final String SELECT_STUDENT_ASSSIGN_TO_GUARDIAN = "SELECT Name, Surname FROM Users WHERE IdGuardian = ?";
 
    StudentService studentService = StudentService.getInstance();
    UserService userService = UserService.getInstance();
@@ -96,5 +103,78 @@ public class GuardianService {
         }
         return checking;
     }
+
+    public void asignStudentToGuardian () {
+        boolean checking = true;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_13);
+            String guardianName = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_14);
+            String guardianSurname = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_3);
+            String studentName = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_4);
+            String studentSurname = scanner.nextLine();
+
+            try {
+                if (userService.checkingIfUserExists(guardianName, guardianSurname)){
+                    if (guardianService.checkingIfIsGuardian(guardianName, guardianSurname)){
+                        if (userService.checkingIfUserExists(studentName, studentSurname)){
+                            if (studentService.checkingIfIsStudent(studentName, studentSurname)){
+                                int idGuardian = userService.getIdFromUser(guardianName, guardianSurname);
+                                updateIdGuardian(idGuardian, studentName, studentSurname);
+                                checking = false;
+                            } else {
+                                System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
+                            }
+                        } else {
+                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+                        }
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_9);
+                    }
+                } else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } while (checking);
+    }
+
+    public void updateIdGuardian (int idGuardian, String studentName, String studentSurname) throws SQLException {
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(ASSIGN_STUDENT_TO_GUARDIAN);
+        preparedStatement.setInt(1, idGuardian);
+        preparedStatement.setString(2, studentName);
+        preparedStatement.setString(3, studentSurname);
+        preparedStatement.execute();
+    }
+
+    public List <Student> assignListOfStudents (int idUser) throws SQLException {
+        List <Student> studentList = new ArrayList<>();
+
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_STUDENT_ASSSIGN_TO_GUARDIAN);
+        preparedStatement.setInt(1, idUser);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            String name = resultSet.getString("Name");
+            String surname = resultSet.getString("Surname");
+            Student student = new Student();
+            student.setName(name);
+            student.setSurname(surname);
+            studentList.add(student);
+            Guardian guardian = new Guardian();
+            guardian.setStudentList(studentList);
+        }
+
+        return studentList;
+    }
+
 
 }

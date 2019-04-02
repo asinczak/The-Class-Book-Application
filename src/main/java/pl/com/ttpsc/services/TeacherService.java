@@ -1,11 +1,11 @@
 package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.Roles;
-
+import pl.com.ttpsc.data.SchoolClass;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Scanner;
+import java.util.*;
 
 public class TeacherService {
 
@@ -105,5 +105,26 @@ public class TeacherService {
             checking = false;
         }
         return checking;
+    }
+
+    public List<SchoolClass> getListClassWithTeacher () {
+        List <SchoolClass> list = new ArrayList<>();
+        try {
+            ResultSet resultSet = classService.getClassAndTeacher();
+            while (resultSet.next()){
+                String className = resultSet.getString("ClassName");
+                int idTeacher = resultSet.getInt("Teacher");
+                String teacher = teacherService.getTeacherFromId(idTeacher);
+                SchoolClass schoolClass = new SchoolClass();
+                schoolClass.setNameClass(className);
+                schoolClass.setTeacher(teacher);
+                int idClass = classService.getIdFromClasses(className);
+                schoolClass.setStudentList(classService.getListOfStudentfromIdClass(idClass));
+                list.add(schoolClass);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

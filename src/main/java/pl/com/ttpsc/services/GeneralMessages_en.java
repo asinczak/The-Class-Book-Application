@@ -20,6 +20,17 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_14 = "Please enter the guardian's surname :";
     static final String ENTER_DATA_15 = "Please enter the date when student was absent (Format: YYYY-MM-DD) :";
     static final String ENTER_DATA_16 = "Please enter the number of lessons per year :";
+    static final String ENTER_DATA_17 = "Please enter login and password :" +
+            "\nLOGIN -> push ENTER (LOGIN: first two letters of name and surname + id, e.g. ToWi3 ";
+    static final String ENTER_DATA_18 = "PASSWORD -> push ENTER (DEFAULT PASSWORD: 123)";
+    static final String ENTER_DATA_19 = "Enter new password :";
+    static final String ENTER_DATA_20 = "Enter login :"+
+            "\nLOGIN -> push ENTER (LOGIN: first two letters of name and surname + id, e.g. ToWi3 ";
+    static final String ENTER_DATA_21 = "Reenter new password :";
+    static final String ENTER_DATA_22 = "Enter new password :" +
+            "\nnew password must have at least 6 characters, 1 upper case, 1 lower case and 1 special character. ";
+    static final String ENTER_DATA_23 = "Enter: \nON -> turn on checking format password" +
+            "\nOFF -> turn off checking password";
 
 
     static final String WORNING_STATEMENT_1 = "Person with such data already exists !";
@@ -35,11 +46,10 @@ public class GeneralMessages_en {
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";
     static final String CORRECT_STATEMENT_2 = "Success! You' ve assigned the TEACHER.";
+    static final String CORRECT_STATEMENT_3 = "Success! You' ve sign in.";
+    static final String CORRECT_STATEMENT_4 = "Success! You' ve changed password.";
+    static final String CORRECT_STATEMNET_5 = "Success!";
 
-
-    static final String STUDENT = "Student";
-    static final String TEACHER = "Teacher";
-    static final String GUARDIAN = "Guardian";
 
 
 

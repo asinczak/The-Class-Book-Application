@@ -1,14 +1,11 @@
 package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.ClassNames;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ClassService {
 
@@ -23,27 +20,11 @@ public class ClassService {
         return classService;
     }
 
-    TeacherService teacherService = TeacherService.getInstance();
 
     static final String GET_CLASS_AND_TEACHER = "Select ClassName, Teacher FROM Classes";
     static final String GET_STUDENTS_FROM_CLASS = "SELECT Name, Surname FROM Users WHERE IdClass = ?";
     static final String GET_ID_FROM_CLASESS = "SELECT Id FROM Classes WHERE ClassName = ?";
 
-    public Map<String, String> getMapClassWithTeacher () {
-        Map<String, String> map = new HashMap<>();
-        try {
-            ResultSet resultSet = getClassAndTeacher();
-            while (resultSet.next()){
-                String className = resultSet.getString("ClassName");
-                int idTeacher = resultSet.getInt("Teacher");
-                String teacher = teacherService.getTeacherFromId(idTeacher);
-                map.put(className, teacher);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return map;
-    }
 
     public ResultSet getClassAndTeacher () throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_CLASS_AND_TEACHER);

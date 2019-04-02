@@ -20,8 +20,8 @@ public class SubjectService {
         return subjectService;
     }
 
-    UserService userService = UserService.getInstance();
-    StudentService studentService = StudentService.getInstance();
+
+
 
     static final String GET_ID_FROM_SUBJECTS = "SELECT Id FROM Subjects WHERE SubjectName = ?";
     static final String INSERT_ABSENCE_FROM_SUBJECT = "INSERT INTO Absences (DateAbsence, IdStudent, IdSubject) " +
@@ -45,45 +45,7 @@ public class SubjectService {
         return idFromSubject;
     }
 
-    public void addStudentAbsence () {
-        boolean checking = true;
 
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
-            String studentName = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_2);
-            String studentSurname = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_11);
-            String subject = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_15);
-            String date = scanner.nextLine();
-
-            try {
-                if (userService.checkingIfUserExists(studentName, studentSurname)){
-                    if (studentService.checkingIfIsStudent(studentName, studentSurname)){
-                        int idSubject = getIdFromSubject(subject);
-                        if (idSubject > 0){
-                            int idStudent = userService.getIdFromUser(studentName, studentSurname);
-                            insertAbsenceFromSubject(date,idStudent, idSubject);
-                            checking = false;
-                        }else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
-                        }
-                    }else  {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                    }
-                }else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } while (checking);
-    }
 
     public void insertAbsenceFromSubject (String date, int idStudent, int idSubject) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_ABSENCE_FROM_SUBJECT);

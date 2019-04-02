@@ -8,8 +8,7 @@ public class SchoolClass {
    private String nameClass;
    private String teacher;
 
-
-   public static List <String> studentList = new ArrayList<>();
+   public List <String> studentList = new ArrayList<>();
 
     public String getNameClass() {
         return nameClass;
@@ -29,6 +28,10 @@ public class SchoolClass {
 
     public List<String> getStudentList() {
         return studentList;
+    }
+
+    public void setStudentList(List<String> studentList) {
+        this.studentList = studentList;
     }
 
     @Override

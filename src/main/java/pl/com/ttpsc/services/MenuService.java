@@ -1,5 +1,7 @@
 package pl.com.ttpsc.services;
 
+import pl.com.ttpsc.data.SettingsAfterLogon;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,10 +19,16 @@ public class MenuService {
         }
         return menuServisce;
     }
-    boolean switchGoes = true;
+
 
     DisplayService displayService = DisplayService.getInstance();
+    LogonService logonService = LogonService.getInstance();
+    SubjectService subjectService = SubjectService.getInstance();
+    StudentService studentService = StudentService.getInstance();
+    SettingService settingService = SettingService.getInstance();
+
     Connection connection = null;
+    boolean switchGoes = true;
 
     public void displayMenu () {
 
@@ -41,7 +49,8 @@ public class MenuService {
 
                 case 1:
 
-                    displayService.displayAllClassesAtSchool();
+                    logonService.logging();
+
 
                     break;
 

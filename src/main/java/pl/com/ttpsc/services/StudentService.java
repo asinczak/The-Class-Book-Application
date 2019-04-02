@@ -6,8 +6,8 @@ import pl.com.ttpsc.data.Subject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class StudentService {
@@ -25,15 +25,13 @@ public class StudentService {
 
     SubjectService subjectService = SubjectService.getInstance();
     ClassService classService = ClassService.getInstance();
-    GuardianService guardianService = GuardianService.getInstance();
     UserService userService = UserService.getInstance();
 
     static final String ASSIGN_STUDENT_TO_CLASS = "UPDATE Users SET IdClass = ? WHERE Name = ? AND Surname = ?";
     static final String INSERT_GRADE_TO_STUDENT = "INSERT INTO Subject_Grade (IdSubject, IdStudent, Grade) VALUES (?, ?, ?)";
     static final String UPDATE_STUDENT_GRADE = "UPDATE Subject_Grade SET Grade = ? WHERE IdSubject = ? AND IdStudent = ?";
-    static final String ASSIGN_STUDENT_TO_GUARDIAN = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
-    private static String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
-    private static String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
+    static String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
+    static String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
 
 
     public void addStudentToDataBase () {
@@ -132,8 +130,6 @@ public class StudentService {
            } catch (SQLException e) {
                e.printStackTrace();
            }
-
-
        } while (checking);
     }
 
@@ -200,56 +196,7 @@ public class StudentService {
         preparedStatement.execute();
     }
 
-    public void asignStudentToGuardian () {
-        boolean checking = true;
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_13);
-            String guardianName = scanner.nextLine();
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_14);
-            String guardianSurname = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_3);
-            String studentName = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_4);
-            String studentSurname = scanner.nextLine();
-
-            try {
-                if (userService.checkingIfUserExists(guardianName, guardianSurname)){
-                    if (guardianService.checkingIfIsGuardian(guardianName, guardianSurname)){
-                        if (userService.checkingIfUserExists(studentName, studentSurname)){
-                            if (checkingIfIsStudent(studentName, studentSurname)){
-                                int idGuardian = userService.getIdFromUser(guardianName, guardianSurname);
-                                updateIdGuardian(idGuardian, studentName, studentSurname);
-                                checking = false;
-                            } else {
-                                System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                            }
-                        } else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                        }
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_9);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        } while (checking);
-    }
-
-    public void updateIdGuardian (int idGuardian, String studentName, String studentSurname) throws SQLException {
-        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(ASSIGN_STUDENT_TO_GUARDIAN);
-        preparedStatement.setInt(1, idGuardian);
-        preparedStatement.setString(2, studentName);
-        preparedStatement.setString(3, studentSurname);
-        preparedStatement.execute();
-    }
 
     public int pointTheStudent () {
         boolean checking = true;
@@ -315,4 +262,51 @@ public class StudentService {
         }
         return checking;
     }
+
+    public void addStudentAbsence (String studentName, String studentSurname, String subject, String date) throws SQLException {
+        if (userService.checkingIfUserExists(studentName, studentSurname)){
+            if (checkingIfIsStudent(studentName, studentSurname)){
+                int idSubject = subjectService.getIdFromSubject(subject);
+                if (idSubject > 0){
+                    int idStudent = userService.getIdFromUser(studentName, studentSurname);
+                    subjectService.insertAbsenceFromSubject(date,idStudent, idSubject);
+
+                }else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+                }
+            }else  {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
+            }
+        }else {
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+        }
+    }
+
+    public void insertStudentAbsence () {
+        boolean checking = true;
+
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_1);
+            String studentName = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_2);
+            String studentSurname = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_11);
+            String subject = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_15);
+            String date = scanner.nextLine();
+
+            try {
+                addStudentAbsence(studentName,studentSurname,subject,date);
+                checking = false;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } while (checking);
+    }
+
+
 }

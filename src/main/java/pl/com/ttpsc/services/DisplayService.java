@@ -1,11 +1,12 @@
 package pl.com.ttpsc.services;
 
+import pl.com.ttpsc.data.SchoolClass;
+import pl.com.ttpsc.data.Student;
 import pl.com.ttpsc.data.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 public class DisplayService {
 
@@ -24,9 +25,11 @@ public class DisplayService {
     SubjectService subjectService = SubjectService.getInstance();
     ClassService classService = ClassService.getInstance();
     UserConverter userConverter = UserConverter.getInstance();
+    TeacherService teacherService = TeacherService.getInstance();
+    GuardianService guardianService = GuardianService.getInstance();
 
 
-    public void displayAllGradesOfStudent () {
+    public void displayAllGradesOfStudentForStudent () {
         try {
         ResultSet resultSet = studentService.getAllGradesOfStudent();
         while (resultSet.next()) {
@@ -80,26 +83,21 @@ public class DisplayService {
 
     public void displayAllClassesAtSchool () {
 
-//        for (int i = 0; i<map.size(); i++) {
+        List <SchoolClass> list = teacherService.getListClassWithTeacher();
+            for (int i = 0; i<list.size(); i++) {
+                String className = list.get(i).getNameClass();
+                String teacher = list.get(i).getTeacher();
+                List<String> studentList = list.get(i).getStudentList();
+                System.out.println("Class: "+className + ", Teacher: " + teacher);
+                System.out.println("List of students :");
+                studentList.forEach(s -> System.out.println(s));
+                System.out.println("*****************************");
+            }
+    }
 
-                try {
-                    Map<String, String> map = classService.getMapClassWithTeacher();
-                    for (Map.Entry <String, String> entry : map.entrySet()) {
-                        int idClass = classService.getIdFromClasses(entry.getKey());
-                        List<String> list = classService.getListOfStudentfromIdClass(idClass);
-                        System.out.println(entry.getKey() + " " + entry.getValue());
-                        System.out.println("List of students :");
-                        list.forEach(s -> System.out.println(s));
-                        System.out.println("*****************************");
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-
-//        }
-
-//        map.forEach((k, v) ->System.out.println("Class: "+ k +": Teacher: " +v));
+    public void displayAllGradesForStudentForGuardian () {
+        int idGuardian;
+        List <Student> studentList = guardianService.assignListOfStudents(idGuardian);
 
     }
 }

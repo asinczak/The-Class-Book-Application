@@ -26,6 +26,7 @@ public class UserService {
     static final String GET_ID_ROLE_FROM_USER = "SELECT IdRole FROM Users WHERE Name = ? AND Surname = ?";
     static final String GET_USER_NAME_SURNAME_FROM_USERS = "SELECT Name, Surname FROM Users WHERE Name = ? AND Surname = ?";
     static final String GET_ROLE_FROM_ROLES = "SELECT RoleName FROM Roles WHERE Id = ?";
+    static final String GET_ID_ROLE_FROM_USER_ID = "SELECT IdRole FROM Users WHERE Id = ?";
 
 
     public void addUserToTheDataBase (Roles roles, String name, String surname) {
@@ -129,5 +130,17 @@ public class UserService {
             roleName = resultSet.getString("RoleName");
         }
         return roleName;
+    }
+
+    public int getIdRoleFromIdUser (int idUser) throws SQLException {
+        int idRole = 0;
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_ID_ROLE_FROM_USER_ID);
+        preparedStatement.setInt(1, idUser);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            idRole = resultSet.getInt("IdRole");
+        }
+        return idRole;
     }
 }
