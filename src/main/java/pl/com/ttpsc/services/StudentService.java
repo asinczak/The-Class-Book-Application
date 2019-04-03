@@ -1,7 +1,6 @@
 package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.Roles;
-import pl.com.ttpsc.data.Subject;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +33,7 @@ public class StudentService {
     static String SELECT_SUBJECT_AND_GRADE_FOR_STUDENT = "SELECT IdSubject, Grade FROM Subject-Grade WHERE IdStudent = ?";
 
 
-    public void addStudentToDataBase () {
+    public void createNewStudent() {
         boolean checking = true;
 
         do {
@@ -252,7 +251,7 @@ public class StudentService {
     }
 
     public ResultSet getAllGradesOfStudent () throws SQLException {
-        int idStudent = logonService.checkingWhoIsLogged();
+        int idStudent = logonService.getIdUserWhoHasLogged();
 
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELSECT_ALL_GRADES_OF_STUDENT);
         preparedStatement.setInt(1, idStudent);

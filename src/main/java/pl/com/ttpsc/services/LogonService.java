@@ -72,6 +72,7 @@ public class LogonService {
                 } else {
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
                 }
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -196,13 +197,22 @@ public class LogonService {
         return idUser;
     }
 
-    public int checkingWhoIsLogged () {
+    public int getIdUserWhoHasLogged() {
         int idUser = 0;
         Map <Integer, String> map =  SettingsAfterLogon.map;
         for (Integer key : map.keySet()){
             idUser = key;
         }
         return idUser;
+    }
+
+    public String getRoleNameOfUserWhoHasLogged () {
+        String roleName = "";
+        Map <Integer, String> map = SettingsAfterLogon.map;
+        for (Integer idRole : map.keySet()){
+            roleName = map.get(idRole);
+        }
+        return roleName;
     }
 
 

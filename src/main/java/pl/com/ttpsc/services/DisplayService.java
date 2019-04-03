@@ -48,7 +48,7 @@ public class DisplayService {
     }
 
     public void displayAllStudentAbsencesForStudent() {
-        int idStudent = logonService.checkingWhoIsLogged();
+        int idStudent = logonService.getIdUserWhoHasLogged();
         try {
             ResultSet resultSet = studentService.getAllStudentAbsences(idStudent);
             while (resultSet.next()) {
@@ -103,7 +103,7 @@ public class DisplayService {
     }
 
     public void displayAllGradesOfStudentForGuardian() {
-        int idGuardian = logonService.checkingWhoIsLogged();
+        int idGuardian = logonService.getIdUserWhoHasLogged();
 
         try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -128,7 +128,7 @@ public class DisplayService {
     }
 
     public void displayAllAbsencesOfStudentForGuardian() {
-        int idGuardian = logonService.checkingWhoIsLogged();
+        int idGuardian = logonService.getIdUserWhoHasLogged();
 
         try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -152,7 +152,7 @@ public class DisplayService {
     }
 
     public void displayStudentsWithTooLowGrades() {
-        int idGuardian = logonService.checkingWhoIsLogged();
+        int idGuardian = logonService.getIdUserWhoHasLogged();
 
         try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -179,7 +179,8 @@ public class DisplayService {
     }
 
     public void displayIfStudentsHaveTooManyAbsences() {
-        int idGuardian = logonService.checkingWhoIsLogged();
+        boolean checking = true;
+        int idGuardian = logonService.getIdUserWhoHasLogged();
 
         try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -189,9 +190,20 @@ public class DisplayService {
 
                 int idStudent = userService.getIdFromUser(studentName, studentSurname);
                Map <String, Integer> map = studentService.getMapOfAbsencesOfStudent(idStudent);
-
+                for (String key : map.keySet()){
+                    Integer value = map.get(key);
+                    int numberOfLessons = subjectService.getNumberOfLessonsForSubject(key);
+                    if(value > numberOfLessons * 0.20){
+                        System.out.println("___________________________________");
+                        System.out.println(studentName +" "+ studentSurname);
+                        System.out.println(key +" "+ value);
+                        checking = false;
+                    }
+                }
             }
-
+                if (checking){
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_11);
+                }
         } catch (SQLException e) {
             e.printStackTrace();
         }

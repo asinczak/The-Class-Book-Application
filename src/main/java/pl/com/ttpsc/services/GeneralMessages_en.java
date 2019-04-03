@@ -43,6 +43,9 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_8 = "Wrong grade! Try again";
     static final String WORNING_STATEMENT_9 = "Wrong data! Person in not a guardian";
     static final String WORNING_STATEMENT_10 = "Wrong data! Student has already got such grade";
+    static final String WORNING_STATEMENT_11 = "There are no students who have too many absences";
+    static final String WORNING_STATEMENT_12 = "You do not have access to such option";
+    static final String WORNING_STATEMENT_13 = "Wrong number! Choose one more time!";
 
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";
@@ -50,11 +53,39 @@ public class GeneralMessages_en {
     static final String CORRECT_STATEMENT_3 = "Success! You' ve signed in.";
     static final String CORRECT_STATEMENT_4 = "Success! You' ve changed password.";
     static final String CORRECT_STATEMNET_5 = "Success!";
+    static final String CORRECT_STATEMENT_6 = "Finish!";
+
+    static final String MENU_FUNCTION = "Choose one option -> push Enter";
+    static final String MENU_FUNCTION_1 = "Create new student -> 1";
+    static final String MENU_FUNCTION_2 = "Create new guardian and assign student -> 2";
+    static final String MENU_FUNCTION_3 = "Add student to class -> 3";
+    static final String MENU_FUNCTION_4 = "Add student a grade -> 4";
+    static final String MENU_FUNCTION_5 = "Modify a grade of student -> 5";
+    static final String MENU_FUNCTION_6 = "Generate student's certificate -> 6";
+    static final String MENU_FUNCTION_7 = "Generate certificates for all students in class -> 7";
+    static final String MENU_FUNCTION_8 = "Generate multiple certificates -> 8";
+    static final String MENU_FUNCTION_9 = "Add a student to a guardian -> 9";
+    static final String MENU_FUNCTION_10 = "Send text message -> 10";
+    static final String MENU_FUNCTION_11 = "Add student an absence -> 11";
+    static final String MENU_FUNCTION_12 = "Display all grades -> 12";
+    static final String MENU_FUNCTION_13 = "Display all my absence -> 13";
+    static final String MENU_FUNCTION_14 = "Display all grades of my students -> 14";
+    static final String MENU_FUNCTION_15 = "Display absences of my students -> 15";
+    static final String MENU_FUNCTION_16 = "Display if any of my students has to low grades -> 16";
+    static final String MENU_FUNCTION_17 = "Display if any my students has too many absences -> 17";
+    static final String MENU_FUNCTION_18 = "Generate reports for students who are going to fail promotion -> 18";
+    static final String MENU_FUNCTION_19 = "Send an excuse to teacher -> 19";
+    static final String MENU_FUNCTION_20 = "Excuse (verify) students absence -> 20";
+    static final String MENU_FUNCTION_21 = "Create new teacher -> 21";
+    static final String MENU_FUNCTION_22 = "Display all persons in system -> 22";
+    static final String MENU_FUNCTION_23 = "Assign teacher to class -> 23";
+    static final String MENU_FUNCTION_24 = "Display all classes + students -> 24";
+    static final String MENU_FUNCTION_25 = "Set number of lessons per year -> 25";
+    static final String MENU_FUNCTION_26 = "Display all teacher -> 26";
+    static final String MENU_FUNCTION_27 = "Change password -> 27";
+    static final String MENU_FUNCTION_28 = "Turn on/off checking password format during changing it -> 28";
+    static final String MENU_FUNCTION_29 = "Log out -> 29";
 
 
 
-
-    public void displayListOfPersons () {
-
-    }
 }
