@@ -31,6 +31,19 @@ public class GeneralMessages_en {
             "\nnew password must have at least 6 characters, 1 upper case, 1 lower case and 1 special character. ";
     static final String ENTER_DATA_23 = "Enter: \nON -> turn on checking format password" +
             "\nOFF -> turn off checking password";
+    static final String ENTER_DATA_24 = "Please enter the teacher's name :";
+    static final String ENTER_DATA_25 = "Please enter the teacher's surname :";
+    static final String ENTER_DATA_26 = "Please enter the excuse";
+    static final String ENTER_DATA_27 = "Please enter 1 -> to approve an excuse" +
+            "\nPlease enter 2 -> to discard an excuse";
+    static final String ENTER_DATA_28 = "Please enter the message number to discard";
+    static final String ENTER_DATA_29 = "Please enter the message number to approve";
+    static final String ENTER_DATA_30 = "Please enter the student's name :";
+    static final String ENTER_DATA_31 = "Please enter the student's surname :";
+    static final String ENTER_DATA_32 = "Please enter 1 -> to display NEW excuses" +
+            "\nPlease enter 2 -> to display all excuses"+
+            "\nPlease enter 3 -> to delete an excuse";
+    static final String ENTER_DATA_33 = "Please enter the message number to delete";
 
 
     static final String WORNING_STATEMENT_1 = "Person with such data already exists !";
@@ -46,7 +59,8 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_11 = "There are no students who have too many absences";
     static final String WORNING_STATEMENT_12 = "You do not have access to such option";
     static final String WORNING_STATEMENT_13 = "Wrong number! Choose one more time!";
-
+    static final String WORNING_STATEMNET_14 = " !!! YOU HAVE NEW EXCUSES, PLEASE CHECK (option nr 29)"+
+            "\n***********************************************************";
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";
     static final String CORRECT_STATEMENT_2 = "Success! You' ve assigned the TEACHER.";
@@ -84,7 +98,10 @@ public class GeneralMessages_en {
     static final String MENU_FUNCTION_26 = "Display all teacher -> 26";
     static final String MENU_FUNCTION_27 = "Change password -> 27";
     static final String MENU_FUNCTION_28 = "Turn on/off checking password format during changing it -> 28";
-    static final String MENU_FUNCTION_29 = "Log out -> 29";
+    static final String MENU_FUNCTION_29 = "Manage excuses from Guardian  -> 29";
+    static final String MENU_FUNCTION_30 = "Log out -> 30";
+
+    static final String INFO_STATEMENT_1 = "EXCUSE :";
 
 
 

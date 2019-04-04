@@ -29,8 +29,12 @@ public class GuardianService {
     static final String SELECT_STUDENT_ASSSIGN_TO_GUARDIAN = "SELECT Name, Surname FROM Users WHERE IdGuardian = ?";
     static final String SELECT_GRADES_FROM_ASSIGN_STUDENT = "SELECT C.SubjectName, D.Grade FROM Subjects AS C, Subject_Grade AS D WHERE C.Id = D.IdSubject AND D.IdStudent = ?";
 
-   StudentService studentService = StudentService.getInstance();
-   UserService userService = UserService.getInstance();
+
+    StudentService studentService = StudentService.getInstance();
+    UserService userService = UserService.getInstance();
+    TeacherService teacherService = TeacherService.getInstance();
+    LogonService logonService = LogonService.getInstance();
+    ExcusesService excusesService = ExcusesService.getInstance();
 
    String nameGuardian = "";
    String surnameGuardian = "";
@@ -188,7 +192,39 @@ public class GuardianService {
         return resultSet;
     }
 
+    public void sendAnExcuseToTeacher () {
+        boolean checking = true;
 
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_24);
+            String teacherName = scanner.nextLine();
 
+            System.out.println(GeneralMessages_en.ENTER_DATA_25);
+            String teacherSurname = scanner.nextLine();
+
+            System.out.println(GeneralMessages_en.ENTER_DATA_26);
+            String excuse = scanner.nextLine();
+
+            try {
+                if (userService.checkingIfUserExists(teacherName, teacherSurname)) {
+                    if (teacherService.checkingIfIsTeacher(teacherName, teacherSurname)) {
+                        int idGuardian = logonService.getIdUserWhoHasLogged();
+                        int idTeacher = userService.getIdFromUser(teacherName, teacherSurname);
+                        excusesService.insertMessageToTeacher(idGuardian, idTeacher, excuse, "NEW");
+                        checking = false;
+                        System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_6);
+                    }
+                } else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }while (checking);
+    }
 
 }

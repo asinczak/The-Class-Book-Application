@@ -26,6 +26,8 @@ public class SubjectService {
     static final String INSERT_NUMBER_OF_LESSONS_PER_YEAR = "UPDATE Subjects SET NumberOfLessons = ? WHERE SubjectName = ?";
     static final String GET_SUBJECT_FROM_ID = "SELECT SubjectName FROM Subjects WHERE Id = ?";
     static final String GET_NUMBER_OF_LESSONS_FOR_SUBJECT = "SELECT NumberOfLessons FROM Subjects WHERE SubjectName = ?";
+    static final String DELETE_STUDENT_ABSENCE = "DELETE FROM Absences WHERE DateAbsence = ? AND IdStudent = ? AND IdSubject = ?";
+    static final String GET_DATA_FROM_ABSENCES = "SELECT DateAbsence, IdStudent, IdSubject FROM Absences ";
 
 
     public int getIdFromSubject (String subject) throws SQLException {
@@ -107,6 +109,29 @@ public class SubjectService {
             numberOfLessons = resultSet.getInt("NumberOfLessons");
         }
         return numberOfLessons;
+    }
+
+    public void deleteStudentAbsence (String date, int idStudent, int idSubject) throws SQLException {
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(DELETE_STUDENT_ABSENCE);
+        preparedStatement.setString(1, date);
+        preparedStatement.setInt(2, idStudent);
+        preparedStatement.setInt(3, idSubject);
+        preparedStatement.execute();
+    }
+
+    public boolean checkingIfSuchAbsenceExists (String date, int idStudent, int idSubject) throws SQLException {
+        boolean checking = false;
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_DATA_FROM_ABSENCES);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            String dateFromBase = resultSet.getString("DateAbsence");
+            int idStudentFromBase = resultSet.getInt("IdStudent");
+            int idSubjectFromBase = resultSet.getInt("IdSubject");
+            if (dateFromBase.equals(date) & idStudentFromBase == idStudent & idSubjectFromBase == idSubject){
+                checking = true;
+            }
+        }
+        return checking;
     }
 }
 

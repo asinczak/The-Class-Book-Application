@@ -31,6 +31,7 @@ public class DisplayService {
     GuardianService guardianService = GuardianService.getInstance();
     LogonService logonService = LogonService.getInstance();
     UserService userService = UserService.getInstance();
+    ExcusesService excusesService = ExcusesService.getInstance();
 
 
     public void displayAllGradesOfStudentForStudent() {
@@ -208,4 +209,6 @@ public class DisplayService {
             e.printStackTrace();
         }
     }
+
+
 }

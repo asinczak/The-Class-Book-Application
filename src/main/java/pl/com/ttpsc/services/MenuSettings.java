@@ -26,11 +26,11 @@ public class MenuSettings {
    private Map <Integer, String> mapWithOptionMenu= new HashMap<>();
 
     public void fillMapWithRoles() throws SQLException {
-            mapWithRoles.put("STUDENT", "10 12 13 27 29");
-            mapWithRoles.put("GUARDIAN", "10 14 15 16 17 18 19 27 29");
-            mapWithRoles.put("TEACHER", "1 2 3 4 5 6 7 8 9 10 11 20 27 29");
-            mapWithRoles.put("PRINCIPAL", "10 21 22 23 24 25 26 27 29");
-            mapWithRoles.put("ADMIN", "10 27 29");
+            mapWithRoles.put("STUDENT", "10 12 13 27 30");
+            mapWithRoles.put("GUARDIAN", "10 14 15 16 17 18 19 27 30");
+            mapWithRoles.put("TEACHER", "1 2 3 4 5 6 7 8 9 10 11 20 27 29 30");
+            mapWithRoles.put("PRINCIPAL", "10 21 22 23 24 25 26 27 30");
+            mapWithRoles.put("ADMIN", "10 27 30");
     }
 
 
@@ -64,6 +64,7 @@ public class MenuSettings {
         mapWithOptionMenu.put(27, GeneralMessages_en.MENU_FUNCTION_27);
         mapWithOptionMenu.put(28, GeneralMessages_en.MENU_FUNCTION_28);
         mapWithOptionMenu.put(29, GeneralMessages_en.MENU_FUNCTION_29);
+        mapWithOptionMenu.put(30, GeneralMessages_en.MENU_FUNCTION_30);
 
     }
 

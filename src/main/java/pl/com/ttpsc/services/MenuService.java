@@ -28,6 +28,7 @@ public class MenuService {
     GuardianService guardianService = GuardianService.getInstance();
     MenuSettings menuSettings = MenuSettings.getInstance();
     TeacherService teacherService = TeacherService.getInstance();
+    PDFservice pdfService = PDFservice.getInstance();
 
     Connection connection = null;
     boolean switchGoes = true;
@@ -46,6 +47,7 @@ public class MenuService {
                 System.out.println("**********************************");
                 System.out.println(GeneralMessages_en.MENU_FUNCTION);
                 menuSettings.displayMenuWithOptions();
+                displayMessageForTeacher();
 
                 int numberMenu = 0;
                 boolean loop = true;
@@ -80,7 +82,7 @@ public class MenuService {
                             studentService.changeGradeFromSubject();
                             break;
                         case 6:
-
+                            pdfService.generateStudentCertificate();
                             break;
                         case 7:
 
@@ -119,10 +121,10 @@ public class MenuService {
 
                             break;
                         case 19:
-
+                            guardianService.sendAnExcuseToTeacher();
                             break;
                         case 20:
-
+                            teacherService.verifyStudentsAbsence();
                             break;
                         case 21:
                             teacherService.createTeacher();
@@ -149,6 +151,9 @@ public class MenuService {
                             logonService.settingService.turnOnOffCheckingPassword();
                             break;
                         case 29:
+                            teacherService.manageExcusesFromGuardian();
+                            break;
+                        case 30:
                             switchGoes = false;
                             System.out.println(GeneralMessages_en.CORRECT_STATEMENT_6);
                             connection.close();
@@ -165,6 +170,13 @@ public class MenuService {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void displayMessageForTeacher () throws SQLException {
+        int idTeacher = logonService.getIdUserWhoHasLogged();
+        if (teacherService.checkingIfThereIsAnyNewExcuseForTeacher(idTeacher)){
+            System.out.println(GeneralMessages_en.WORNING_STATEMNET_14);
         }
     }
 }
