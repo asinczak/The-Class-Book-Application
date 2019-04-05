@@ -21,7 +21,7 @@ public class ExcusesService {
 
     static final String INSERT_MESSAGE_TO_TEACHER = "INSERT INTO Excuses (IdGuardian, IdTeacher, Message, Status) VALUES (?,?,?,?)";
     static final String GET_NEW_EXCUSES_FROM_GUARDIAN = "SELECT IdGuardian, IdTeacher, Message FROM Excuses WHERE Status = 'NEW'";
-    static final String GET_ALL_MESSAGES_FORM_EXCUSES = "SELECT Id, Message, Status FROM EXCUSES WHERE IdTeacher = ?";
+    static final String GET_ALL_MESSAGES_FORM_EXCUSES = "SELECT Id, IdGuardian, Message, Status FROM EXCUSES WHERE IdTeacher = ?";
     static final String GET_ID_FROM_EXCUSES = "SELECT Id FROM Excuses WHERE IdTeacher = ?";
     static final String UPDATE_STATUS_OF_EXCUSE = "UPDATE Excuses SET Status = ? WHERE Id = ?";
     static final String DELETE_AN_EXCUSE = "DELETE FROM Excuses WHERE Id = ?";

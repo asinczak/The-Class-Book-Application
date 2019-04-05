@@ -30,7 +30,7 @@ public class StudentService {
     static final String UPDATE_STUDENT_GRADE = "UPDATE Subject_Grade SET Grade = ? WHERE IdSubject = ? AND IdStudent = ?";
     static String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
     static String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
-    static String SELECT_SUBJECT_AND_GRADE_FOR_STUDENT = "SELECT IdSubject, Grade FROM Subject-Grade WHERE IdStudent = ?";
+    static String SELECT_SUBJECT_AND_GRADE_FOR_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
 
 
     public void createNewStudent() {
@@ -38,10 +38,10 @@ public class StudentService {
 
         do {
             Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
+            System.out.println(GeneralMessages_en.ENTER_DATA_30);
             String name = scanner.nextLine();
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_2);
+            System.out.println(GeneralMessages_en.ENTER_DATA_31);
             String surname = scanner.nextLine();
 
             name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
@@ -134,6 +134,7 @@ public class StudentService {
                                     if (!checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)) {
                                         insertGradeToStudent(idSubject, idStudent, grade);
                                         checking = false;
+                                        System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
                                     } else {
                                         System.out.println(GeneralMessages_en.WORNING_STATEMENT_10);
                                     }

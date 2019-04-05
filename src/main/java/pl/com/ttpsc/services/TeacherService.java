@@ -178,16 +178,15 @@ public class TeacherService {
             switch (number) {
                 case 1:
                     displayNewExcuses(idTeacher);
-                    checking = false;
                     break;
                 case 2:
                    displayAllMessagesFromExcuses(idTeacher);
-                    checking = false;
                     break;
                 case 3:
                     deleteChosenExcuse(idTeacher);
-                    checking = false;
                     break;
+                case 4:
+                    checking = false;
                 default:
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
             }
@@ -295,16 +294,18 @@ public class TeacherService {
             int id = resultSet.getInt("Id");
             String excuse = resultSet.getString("Message");
             String status = resultSet.getString("Status");
+            int idGuardian = resultSet.getInt("IdGuardian");
+            String guardian = userService.getUserNameSurnameFromId(idGuardian);
             String displayNew = "";
             System.out.println(GeneralMessages_en.INFO_STATEMENT_1);
             if (status.equals("NEW")){
                 displayNew = "###### " +status +" ######";
-                System.out.println("Message number: "+ id+
+                System.out.println("Message number: "+ id+ "\nFrom: "+guardian+
                         "\nMessage: "+ excuse+ "\nStatus:" +displayNew+
                         "\n___________________________________________");
             } else {
 
-                System.out.println("Message number: " + id +
+                System.out.println("Message number: " + id +"\nFrom: "+guardian+
                         "\nMessage: " + excuse + "\nStatus:" + status +
                         "\n___________________________________________");
             }
@@ -317,13 +318,16 @@ public class TeacherService {
             int id = resultSet.getInt("Id");
             String excuse = resultSet.getString("Message");
             String status = resultSet.getString("Status");
-
-            System.out.println(GeneralMessages_en.INFO_STATEMENT_1);
+            int idGuardian = resultSet.getInt("IdGuardian");
+            String guardian = userService.getUserNameSurnameFromId(idGuardian);
             if (status.equals("NEW")) {
-                System.out.println("Message number: " + id +
+                System.out.println(GeneralMessages_en.INFO_STATEMENT_1);
+                System.out.println("Message number: " + id +"\nFrom: "+guardian+
                         "\nMessage: " + excuse + "\nStatus:" + status +
                         "\n___________________________________________");
                 excusesService.updateStatusOfExcuse("READ", id);
+            } else {
+                System.out.println(GeneralMessages_en.INFO_STATEMENT_5);
             }
         }
     }

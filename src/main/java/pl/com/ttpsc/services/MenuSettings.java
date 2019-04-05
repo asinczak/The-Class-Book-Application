@@ -1,10 +1,7 @@
 package pl.com.ttpsc.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MenuSettings {
 
@@ -21,9 +18,11 @@ public class MenuSettings {
 
     LogonService logonService = LogonService.getInstance();
 
-   private Map<String, String> mapWithRoles = new HashMap<>();
+   private Map <String, String> mapWithRoles = new HashMap<>();
 
    private Map <Integer, String> mapWithOptionMenu= new HashMap<>();
+
+   private Map <Integer, Integer> mapWithMenuForLoggedUser = new LinkedHashMap<>();
 
     public void fillMapWithRoles() throws SQLException {
             mapWithRoles.put("STUDENT", "10 12 13 27 30");
@@ -32,7 +31,6 @@ public class MenuSettings {
             mapWithRoles.put("PRINCIPAL", "10 21 22 23 24 25 26 27 30");
             mapWithRoles.put("ADMIN", "10 27 30");
     }
-
 
     public void fillMapWithOptionMenu () {
         mapWithOptionMenu.put(1, GeneralMessages_en.MENU_FUNCTION_1);
@@ -68,50 +66,52 @@ public class MenuSettings {
 
     }
 
-    public List <Integer> getListOfMenuNumbers (String roleName) throws SQLException {
+    public void getListOfMenuNumbers () throws SQLException {
+        fillAllTablesWithData();
+        String roleName = logonService.getRoleNameOfUserWhoHasLogged();
         List <Integer> listOfMenuNumbers = new ArrayList<>();
         for (String role : mapWithRoles.keySet()) {
             if (role.equals(roleName)) {
                 String menuNumbers = mapWithRoles.get(role);
+                int indeks = 0;
                 String tab[] = menuNumbers.split(" +");
                 for (String number : tab) {
                     listOfMenuNumbers.add(Integer.parseInt(number));
+                    indeks++;
+                    mapWithMenuForLoggedUser.put(indeks, Integer.valueOf(number));
                 }
             }
         }
-        return listOfMenuNumbers;
     }
 
     public void displayMenuWithOptions() throws SQLException {
-       String roleName = logonService.getRoleNameOfUserWhoHasLogged();
-       List<Integer> list= getListOfMenuNumbers(roleName);
-
-       for (Integer numberOptionMenu : mapWithOptionMenu.keySet()){
-           for (int numberFromList : list){
-               if (numberOptionMenu == numberFromList){
-                   String menuOption = mapWithOptionMenu.get(numberOptionMenu);
-                   System.out.println(menuOption);
-               }
-           }
+        getListOfMenuNumbers();
+        for (Integer numberOptionMenu : mapWithOptionMenu.keySet()){
+            String menuOption = mapWithOptionMenu.get(numberOptionMenu);
+            for (int indeks : mapWithMenuForLoggedUser.keySet()) {
+                int optionMenu = mapWithMenuForLoggedUser.get(indeks);
+                if (numberOptionMenu == optionMenu) {
+                    System.out.println(indeks + menuOption);
+                }
+            }
        }
     }
 
-    public boolean checkingIfUserHasAccessToSuchOption (int numberFromUser) throws SQLException {
-        boolean checking = false;
-        String roleName = logonService.getRoleNameOfUserWhoHasLogged();
-        List <Integer> listOfMenuNumbers = getListOfMenuNumbers(roleName);
-        for (int numberFromList : listOfMenuNumbers){
-            if (numberFromList == numberFromUser){
-                checking = true;
+    public int getOptionToDo (int numberFromUser) throws SQLException {
+        int optionTodo = 0;
+
+        for (int indeks : mapWithMenuForLoggedUser.keySet()) {
+            int optionMenuFromMap = mapWithMenuForLoggedUser.get(indeks);
+            if (numberFromUser == indeks){
+                optionTodo = optionMenuFromMap;
             }
         }
-        return checking;
+        return optionTodo;
     }
 
     public void fillAllTablesWithData () throws SQLException {
         fillMapWithRoles();
         fillMapWithOptionMenu();
     }
-
 
 }

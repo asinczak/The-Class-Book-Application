@@ -29,6 +29,8 @@ public class MenuService {
     MenuSettings menuSettings = MenuSettings.getInstance();
     TeacherService teacherService = TeacherService.getInstance();
     PDFservice pdfService = PDFservice.getInstance();
+    UserService userService = UserService.getInstance();
+    MessagesService messagesService = MessagesService.getInstance();
 
     Connection connection = null;
     boolean switchGoes = true;
@@ -39,7 +41,6 @@ public class MenuService {
             connection = DriverManager.getConnection("jdbc:sqlite:Users.db");
 
             logonService.logging();
-            menuSettings.fillAllTablesWithData();
 
             do {
 
@@ -48,6 +49,7 @@ public class MenuService {
                 System.out.println(GeneralMessages_en.MENU_FUNCTION);
                 menuSettings.displayMenuWithOptions();
                 displayMessageForTeacher();
+                displayMessageForUser();
 
                 int numberMenu = 0;
                 boolean loop = true;
@@ -61,10 +63,10 @@ public class MenuService {
                     }
                 }
 
+                int optionToDo = menuSettings.getOptionToDo(numberMenu);
+                if (optionToDo != 0) {
 
-                if (menuSettings.checkingIfUserHasAccessToSuchOption(numberMenu)) {
-
-                    switch (numberMenu) {
+                    switch (optionToDo) {
 
                         case 1:
                             studentService.createNewStudent();
@@ -94,7 +96,7 @@ public class MenuService {
                             guardianService.insertGuardianToStudent();
                             break;
                         case 10:
-
+                            messagesService.manageMessages();
                             break;
                         case 11:
                             studentService.insertStudentAbsence();
@@ -176,7 +178,14 @@ public class MenuService {
     public void displayMessageForTeacher () throws SQLException {
         int idTeacher = logonService.getIdUserWhoHasLogged();
         if (teacherService.checkingIfThereIsAnyNewExcuseForTeacher(idTeacher)){
-            System.out.println(GeneralMessages_en.WORNING_STATEMNET_14);
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_2);
+        }
+    }
+
+    public void displayMessageForUser () throws SQLException {
+        int idUser = logonService.getIdUserWhoHasLogged();
+        if (messagesService.checkingIfThereIsAnyNewMessageForUser(idUser)){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_3);
         }
     }
 }

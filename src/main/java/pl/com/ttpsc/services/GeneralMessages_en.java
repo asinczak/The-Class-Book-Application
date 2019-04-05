@@ -14,7 +14,7 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_10 = "Enter the name of class to assign" + "\nChoose one from these:" +
             "\nGeneral, "+"Lingual, "+"Mathematical, "+"Natural-Scientific, "+"Sporting";
     static final String ENTER_DATA_11 = "Please enter the name of subject" + "\nChoose one from theses:"+
-            "\nMaths, Science, Biology, Physic, Chemistry, Geography, History, Physical education, Art, Music, English";
+            "\nMaths, Science, Biology, Physics, Chemistry, Geography, History, Physical education, Art, Music, English";
     static final String ENTER_DATA_12 = "Enter the grade (from 1-6)";
     static final String ENTER_DATA_13 = "Please enter the guardian's name :";
     static final String ENTER_DATA_14 = "Please enter the guardian's surname :";
@@ -42,8 +42,20 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_31 = "Please enter the student's surname :";
     static final String ENTER_DATA_32 = "Please enter 1 -> to display NEW excuses" +
             "\nPlease enter 2 -> to display all excuses"+
-            "\nPlease enter 3 -> to delete an excuse";
+            "\nPlease enter 3 -> to delete an excuse"+
+            "\nPlease enter 4 -> to finish";
     static final String ENTER_DATA_33 = "Please enter the message number to delete";
+    static final String ENTER_DATA_34 = "Please enter 1 -> to send the message" +
+            "\nPlease enter 2 -> to replay the message"+
+            "\nPlease enter 3 -> to delete the message"+
+            "\nPlease enter 4 -> to display NEW messages"+
+            "\nPlease enter 5 -> to display all messages"+
+            "\nPlease enter 6 -> to finish";
+    static final String ENTER_DATA_35 = "Please enter the name of receiver";
+    static final String ENTER_DATA_36 = "Please enter the surname of receiver";
+    static final String ENTER_DATA_37 = "Please enter the message";
+    static final String ENTER_DATA_38 = "Please enter the number of message you'd like to replay";
+    static final String ENTER_DATA_39 = "Please enter the number of message you'd like to delete";
 
 
     static final String WORNING_STATEMENT_1 = "Person with such data already exists !";
@@ -59,8 +71,7 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_11 = "There are no students who have too many absences";
     static final String WORNING_STATEMENT_12 = "You do not have access to such option";
     static final String WORNING_STATEMENT_13 = "Wrong number! Choose one more time!";
-    static final String WORNING_STATEMNET_14 = " !!! YOU HAVE NEW EXCUSES, PLEASE CHECK (option nr 29)"+
-            "\n***********************************************************";
+
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";
     static final String CORRECT_STATEMENT_2 = "Success! You' ve assigned the TEACHER.";
@@ -70,38 +81,44 @@ public class GeneralMessages_en {
     static final String CORRECT_STATEMENT_6 = "Finish!";
 
     static final String MENU_FUNCTION = "Choose one option -> push Enter";
-    static final String MENU_FUNCTION_1 = "Create new student -> 1";
-    static final String MENU_FUNCTION_2 = "Create new guardian and assign student -> 2";
-    static final String MENU_FUNCTION_3 = "Add student to class -> 3";
-    static final String MENU_FUNCTION_4 = "Add student a grade -> 4";
-    static final String MENU_FUNCTION_5 = "Modify a grade of student -> 5";
-    static final String MENU_FUNCTION_6 = "Generate student's certificate -> 6";
-    static final String MENU_FUNCTION_7 = "Generate certificates for all students in class -> 7";
-    static final String MENU_FUNCTION_8 = "Generate multiple certificates -> 8";
-    static final String MENU_FUNCTION_9 = "Add a student to a guardian -> 9";
-    static final String MENU_FUNCTION_10 = "Send text message -> 10";
-    static final String MENU_FUNCTION_11 = "Add student an absence -> 11";
-    static final String MENU_FUNCTION_12 = "Display all grades -> 12";
-    static final String MENU_FUNCTION_13 = "Display all my absence -> 13";
-    static final String MENU_FUNCTION_14 = "Display all grades of my students -> 14";
-    static final String MENU_FUNCTION_15 = "Display absences of my students -> 15";
-    static final String MENU_FUNCTION_16 = "Display if any of my students has to low grades -> 16";
-    static final String MENU_FUNCTION_17 = "Display if any my students has too many absences -> 17";
-    static final String MENU_FUNCTION_18 = "Generate reports for students who are going to fail promotion -> 18";
-    static final String MENU_FUNCTION_19 = "Send an excuse to teacher -> 19";
-    static final String MENU_FUNCTION_20 = "Excuse (verify) students absence -> 20";
-    static final String MENU_FUNCTION_21 = "Create new teacher -> 21";
-    static final String MENU_FUNCTION_22 = "Display all persons in system -> 22";
-    static final String MENU_FUNCTION_23 = "Assign teacher to class -> 23";
-    static final String MENU_FUNCTION_24 = "Display all classes + students -> 24";
-    static final String MENU_FUNCTION_25 = "Set number of lessons per year -> 25";
-    static final String MENU_FUNCTION_26 = "Display all teacher -> 26";
-    static final String MENU_FUNCTION_27 = "Change password -> 27";
-    static final String MENU_FUNCTION_28 = "Turn on/off checking password format during changing it -> 28";
-    static final String MENU_FUNCTION_29 = "Manage excuses from Guardian  -> 29";
-    static final String MENU_FUNCTION_30 = "Log out -> 30";
+    static final String MENU_FUNCTION_1 = " -> Create new student.";
+    static final String MENU_FUNCTION_2 = " -> Create new guardian and assign student.";
+    static final String MENU_FUNCTION_3 = " -> Add student to class.";
+    static final String MENU_FUNCTION_4 = " -> Add student a grade.";
+    static final String MENU_FUNCTION_5 = " -> Modify a grade of student.";
+    static final String MENU_FUNCTION_6 = " -> Generate student's certificate.";
+    static final String MENU_FUNCTION_7 = " -> Generate certificates for all students in class.";
+    static final String MENU_FUNCTION_8 = " -> Generate multiple certificates.";
+    static final String MENU_FUNCTION_9 = " -> Add a student to a guardian.";
+    static final String MENU_FUNCTION_10 = " -> Manage your messages.";
+    static final String MENU_FUNCTION_11 = " -> Add student an absence.";
+    static final String MENU_FUNCTION_12 = " -> Display all grades.";
+    static final String MENU_FUNCTION_13 = " -> Display all my absence.";
+    static final String MENU_FUNCTION_14 = " -> Display all grades of my students.";
+    static final String MENU_FUNCTION_15 = " -> Display absences of my students.";
+    static final String MENU_FUNCTION_16 = " -> Display if any of my students has to low grades.";
+    static final String MENU_FUNCTION_17 = " -> Display if any my students has too many absences.";
+    static final String MENU_FUNCTION_18 = " -> Generate reports for students who are going to fail promotion.";
+    static final String MENU_FUNCTION_19 = " -> Send an excuse to teacher.";
+    static final String MENU_FUNCTION_20 = " -> Excuse (verify) students absence.";
+    static final String MENU_FUNCTION_21 = " -> Create new teacher.";
+    static final String MENU_FUNCTION_22 = " -> Display all persons in system.";
+    static final String MENU_FUNCTION_23 = " -> Assign teacher to class.";
+    static final String MENU_FUNCTION_24 = " -> Display all classes + students.";
+    static final String MENU_FUNCTION_25 = " -> Set number of lessons per year.";
+    static final String MENU_FUNCTION_26 = " -> Display all teacher.";
+    static final String MENU_FUNCTION_27 = " -> Change password.";
+    static final String MENU_FUNCTION_28 = " -> Turn on/off checking password format during changing it.";
+    static final String MENU_FUNCTION_29 = " -> Manage excuses from Guardian.";
+    static final String MENU_FUNCTION_30 = " -> Log out.";
 
     static final String INFO_STATEMENT_1 = "EXCUSE :";
+    static final String INFO_STATEMENT_2 = " !!! YOU HAVE NEW EXCUSES, PLEASE CHECK (option nr 29)"+
+            "\n***********************************************************";
+    static final String INFO_STATEMENT_3 = " !!! YOU HAVE NEW MESSAGES, PLEASE CHECK (option nr 10)"+
+            "\n***********************************************************";
+    static final String INFO_STATEMENT_4 = "MESSAGE :";
+    static final String INFO_STATEMENT_5 = "There are no new messages ";
 
 
 

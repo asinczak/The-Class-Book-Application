@@ -1,4 +1,5 @@
 package pl.com.ttpsc.services;
+import org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences;
 import org.sqlite.SQLiteException;
 import pl.com.ttpsc.data.Roles;
 
@@ -27,7 +28,9 @@ public class UserService {
     static final String GET_USER_NAME_SURNAME_FROM_USERS = "SELECT Name, Surname FROM Users WHERE Name = ? AND Surname = ?";
     static final String GET_ROLE_FROM_ROLES = "SELECT RoleName FROM Roles WHERE Id = ?";
     static final String GET_ID_ROLE_FROM_USER_ID = "SELECT IdRole FROM Users WHERE Id = ?";
-    private static String INSERT_NEW_USER_INTO_LOGON = "INSERT INTO Logon (Login, Password, IdUser) VALUES (?, ?, ?)";
+    static final String INSERT_NEW_USER_INTO_LOGON = "INSERT INTO Logon (Login, Password, IdUser) VALUES (?, ?, ?)";
+    static final String GET_USER_NAME_SURNAME_FROM_ID = "SELECT Name, Surname FROM Users WHERE Id = ?";
+
 
 
     public boolean addUserToTheDataBase (Roles roles, String name, String surname) throws SQLException {
@@ -146,6 +149,19 @@ public class UserService {
         preparedStatement.setString(2, defaultPassword);
         preparedStatement.setInt(3, idUser);
         preparedStatement.execute();
+    }
+
+    public String getUserNameSurnameFromId (int id) throws SQLException {
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(GET_USER_NAME_SURNAME_FROM_ID);
+        preparedStatement.setInt(1, id);
+        String user = "";
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            String name = resultSet.getString("Name");
+            String surname = resultSet.getString("Surname");
+            user = ""+name+" "+surname;
+        }
+        return user;
     }
 
 }
