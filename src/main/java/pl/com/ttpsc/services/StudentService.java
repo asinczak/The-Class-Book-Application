@@ -5,6 +5,8 @@ import pl.com.ttpsc.data.Roles;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class StudentService {
@@ -28,74 +30,44 @@ public class StudentService {
     static final String ASSIGN_STUDENT_TO_CLASS = "UPDATE Users SET IdClass = ? WHERE Name = ? AND Surname = ?";
     static final String INSERT_GRADE_TO_STUDENT = "INSERT INTO Subject_Grade (IdSubject, IdStudent, Grade) VALUES (?, ?, ?)";
     static final String UPDATE_STUDENT_GRADE = "UPDATE Subject_Grade SET Grade = ? WHERE IdSubject = ? AND IdStudent = ?";
-    static String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
-    static String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
-    static String SELECT_SUBJECT_AND_GRADE_FOR_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
+    static final String SELSECT_ALL_GRADES_OF_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
+    static final String SELECT_STUDENT_ABSENCES = "SELECT DateAbsence, IdSubject FROM Absences WHERE IdStudent = ?";
+    static final String SELECT_SUBJECT_AND_GRADE_FOR_STUDENT = "SELECT IdSubject, Grade FROM Subject_Grade WHERE IdStudent = ?";
 
 
-    public void createNewStudent() {
-        boolean checking = true;
+    public void createNewStudent() throws SQLException {
+            String enteredData = userService.getNameAndSurnameFromUser();
+            if (enteredData.equalsIgnoreCase("x")){
+                System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+            } else {
+                String [] tab = enteredData.split(" ");
+                String name = tab[0];
+                String surname = tab[1];
 
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_30);
-            String name = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_31);
-            String surname = scanner.nextLine();
-
-            name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
-            surname = surname.substring(0,1).toUpperCase() + surname.substring(1).toLowerCase();
-
-            try {
-                if (userService.addUserToTheDataBase(Roles.STUDENT, name, surname)){
-                    System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
-                    int idUser = userService.getIdFromUser(name, surname);
-                    userService.insertNewUserIntoLogon(name, surname, idUser);
-                    checking = false;
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                userService.addUserToTheDataBase(Roles.STUDENT, name, surname);
+                System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+                int idUser = userService.getIdFromUser(name, surname);
+                userService.insertNewUserIntoLogon(name, surname, idUser);
             }
-        } while (checking);
     }
 
-    public void asignStudentToClass() {
-        boolean whileGoes = true;
+    public void asignStudentToClass() throws SQLException {
+        String [] tab = getDataToAssignStudentToClass();
 
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_3);
-            String studentName = scanner.nextLine();
+        if(tab[0].equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String nameAndSurname = tab[0];
+            String className = tab[1];
+            int idClass = classService.getIdFromClasses(className);
+            String[] tabWithNameAndSurname = nameAndSurname.split(" ");
+            String studentName = tabWithNameAndSurname[0];
+            String studentSurname = tabWithNameAndSurname[1];
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_4);
-            String studentSurname = scanner.nextLine();
+            updateStudentAddClassId(idClass, studentName, studentSurname);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_10);
-            String className = scanner.nextLine();
-
-            try {
-                if (userService.checkingIfUserExists(studentName, studentSurname)) {
-                    if (checkingIfIsStudent(studentName, studentSurname)){
-                        int idClass = classService.getIdFromClasses(className);
-                        if (idClass > 0) {
-                            updateStudentAddClassId(idClass, studentName, studentSurname);
-                            whileGoes = false;
-                        } else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_5);
-                        }
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
-            }
-        } while (whileGoes);
     }
 
     public void updateStudentAddClassId (int idClass, String name, String surname) throws SQLException {
@@ -106,55 +78,25 @@ public class StudentService {
         preparedStatement.execute();
     }
 
-    public void addStudentGrade () {
-       boolean checking = true;
-       int grade = 0;
+    public void addStudentGrade () throws SQLException {
+        String[] tab = getDataToAddStudentGrade();
 
-       do {
-           Scanner scanner = new Scanner(System.in);
-           System.out.println(GeneralMessages_en.ENTER_DATA_1);
-           String studentName = scanner.nextLine();
-
-           System.out.println(GeneralMessages_en.ENTER_DATA_2);
-           String studentSurname = scanner.nextLine();
-
-           System.out.println(GeneralMessages_en.ENTER_DATA_11);
-           String subject = scanner.nextLine();
-
-           System.out.println(GeneralMessages_en.ENTER_DATA_12);
-           grade = scanner.nextInt();
-
-           try {
-               if (userService.checkingIfUserExists(studentName, studentSurname)){
-                   if (checkingIfIsStudent(studentName, studentSurname)) {
-                       if (grade > 0 & grade < 7) {
-                           int idSubject = subjectService.getIdFromSubject(subject);
-                           if (idSubject > 0) {
-                               int idStudent = userService.getIdFromUser(studentName, studentSurname);
-                                    if (!checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)) {
-                                        insertGradeToStudent(idSubject, idStudent, grade);
-                                        checking = false;
-                                        System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
-                                    } else {
-                                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_10);
-                                    }
-                           } else {
-                               System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
-                           }
-                       }else {
-                           System.out.println(GeneralMessages_en.WORNING_STATEMENT_8);
-                       }
-                   } else {
-                       System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                   }
-               } else {
-                   System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-               }
-           } catch (SQLException e) {
-               e.printStackTrace();
-           }
-       } while (checking);
+        if(tab[0].equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String name = tab[0];
+            String surname = tab[1];
+            String subject = tab[2];
+            String grade = tab[3];
+            int idSubject = subjectService.getIdFromSubject(subject);
+            int idStudent = userService.getIdFromUser(name, surname);
+            int gradeAsInt = Integer.parseInt(grade);
+            insertGradeToStudent(idSubject, idStudent, gradeAsInt);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
+
+
 
     public void insertGradeToStudent (int idSubject, int idStudent, int grade) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_GRADE_TO_STUDENT);
@@ -164,51 +106,22 @@ public class StudentService {
         preparedStatement.execute();
     }
 
-    public void changeGradeFromSubject () {
-        boolean checking = true;
-        int grade = 0;
+    public void changeGradeFromSubject () throws SQLException {
+        String[] tab = getDataToAddStudentGrade();
 
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
-            String studentName = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_2);
-            String studentSurname = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_11);
-            String subject = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_12);
-            grade = scanner.nextInt();
-
-            try {
-                if (userService.checkingIfUserExists(studentName, studentSurname)){
-                    if (checkingIfIsStudent(studentName, studentSurname)) {
-                        if (grade > 0 & grade < 7) {
-                            int idSubject = subjectService.getIdFromSubject(subject);
-                            if (idSubject > 0) {
-                                int idStudent = userService.getIdFromUser(studentName, studentSurname);
-                                updateStudentGrade(grade, idSubject, idStudent);
-                                checking = false;
-                            } else {
-                                System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
-                            }
-                        }else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_8);
-                        }
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-
-        } while (checking);
+        if(tab[0].equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String name = tab[0];
+            String surname = tab[1];
+            String subject = tab[2];
+            String grade = tab[3];
+            int idSubject = subjectService.getIdFromSubject(subject);
+            int idStudent = userService.getIdFromUser(name, surname);
+            int gradeAsInt = Integer.parseInt(grade);
+            updateStudentGrade(gradeAsInt, idSubject, idStudent);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
 
     public void updateStudentGrade (int grade, int idSubject, int idStudent) throws SQLException {
@@ -217,38 +130,6 @@ public class StudentService {
         preparedStatement.setInt(2, idSubject);
         preparedStatement.setInt(3, idStudent);
         preparedStatement.execute();
-    }
-
-
-
-    public int pointTheStudent () {
-        boolean checking = true;
-        int idStudent = 0;
-
-       do {
-           Scanner scanner = new Scanner(System.in);
-           System.out.println(GeneralMessages_en.ENTER_DATA_1);
-           String studentName = scanner.nextLine();
-
-           System.out.println(GeneralMessages_en.ENTER_DATA_2);
-           String studentSurname = scanner.nextLine();
-
-           try {
-               if (userService.checkingIfUserExists(studentName, studentSurname)) {
-                   if (checkingIfIsStudent(studentName, studentSurname)) {
-                       idStudent = userService.getIdFromUser(studentName, studentSurname);
-                       checking = false;
-                   } else {
-                       System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                   }
-               } else {
-                   System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-               }
-           } catch (SQLException e) {
-               e.printStackTrace();
-           }
-       }while (checking);
-        return idStudent;
     }
 
     public ResultSet getAllGradesOfStudent () throws SQLException {
@@ -284,49 +165,40 @@ public class StudentService {
         return checking;
     }
 
-    public void addStudentAbsence (String studentName, String studentSurname, String subject, String date) throws SQLException {
-        if (userService.checkingIfUserExists(studentName, studentSurname)){
-            if (checkingIfIsStudent(studentName, studentSurname)){
-                int idSubject = subjectService.getIdFromSubject(subject);
-                if (idSubject > 0){
-                    int idStudent = userService.getIdFromUser(studentName, studentSurname);
-                    subjectService.insertAbsenceFromSubject(date,idStudent, idSubject);
+    public String[] getDataToAddAbsence () throws SQLException {
+        String[] tab = new String[1];
+        String enteredData = getNameAndSurnameAndCheckForStudent();
+        if (enteredData.equalsIgnoreCase("x")) {
+            tab[0] = enteredData;
+        } else {
+            String[] tabWithNameAndSurname = enteredData.split(" ");
+            String studentName = tabWithNameAndSurname[0];
+            String studentSurname = tabWithNameAndSurname[1];
+            String subject = getSubjectToAddStudentGrade();
 
-                }else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
-                }
-            }else  {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-            }
-        }else {
-            System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+            int idStudent = userService.getIdFromUser(studentName, studentSurname);
+            int idSubject = subjectService.getIdFromSubject(subject);
+            tab = new String[3];
+            tab[0] = String.valueOf(idStudent);
+            tab[1] = String.valueOf(idSubject);
+            tab[2] = enterTheDate();
+
         }
+        return tab;
     }
 
-    public void insertStudentAbsence () {
-        boolean checking = true;
+    public void addAbsenceToStudent() throws SQLException {
+        String[] tab = getDataToAddAbsence();
 
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
-            String studentName = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_2);
-            String studentSurname = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_11);
-            String subject = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_15);
-            String date = scanner.nextLine();
-
-            try {
-                addStudentAbsence(studentName,studentSurname,subject,date);
-                checking = false;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } while (checking);
+        if(tab[0].equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            int idStudent = Integer.parseInt(tab[0]);
+            int idSubject = Integer.parseInt(tab[1]);
+            String date = tab[2];
+            subjectService.insertAbsenceFromSubject(date, idStudent, idSubject);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
 
 
@@ -369,4 +241,186 @@ public class StudentService {
         }
         return map;
     }
+
+    public boolean checkingTheFormatDate(String date) throws ParseException {
+        if (date == null || !date.matches("[0-9]{4}(-)[0-9]{1,2}(-)[0-9]{1,2}")){
+            return false;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+
+        dateFormat.parse(date.trim());
+        return true;
+    }
+
+    public String enterTheDate (){
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_15);
+            String date = scanner.nextLine();
+            try {
+                int comparison = checkingDateToCurrentDate(date);
+            if(checkingTheFormatDate(date) & comparison <= 0){
+                    return date;
+
+            } else {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+            }
+            } catch (ParseException e) {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+            }
+        }while (true);
+    }
+
+    public int checkingDateToCurrentDate (String date) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        dateFormat.format(currentDate);
+        Date enterDate = dateFormat.parse(date);
+        int comparison = enterDate.compareTo(currentDate);
+        return comparison;
+    }
+
+    public String [] getDataToAssignStudentToClass () throws SQLException {
+        String[] tab = new String[1];
+        String enteredData = getNameAndSurnameAndCheckForStudent();
+        if (enteredData.equalsIgnoreCase("x")) {
+            tab[0] = enteredData;
+        } else {
+            tab = getClassToAssignStudent(enteredData);
+        }
+        return tab;
+        }
+
+        public String [] getClassToAssignStudent (String enteredData) throws SQLException {
+            boolean checking = true;
+            String[] tab = new String[1];
+            do {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_10);
+                String className = scanner.nextLine();
+                int idClass = classService.getIdFromClasses(className);
+                if (idClass > 0) {
+                    tab[0] = enteredData;
+                    tab[1] = className;
+                    checking = false;
+
+                } else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_5);
+                }
+            } while (checking);
+            return tab;
+        }
+
+    public String getNameAndSurnameAndCheckForStudent () throws SQLException {
+        boolean checking = true;
+        String returnData = "";
+
+            do {
+                try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_3);
+            String enteredData = scanner.nextLine();
+
+            if (enteredData.equalsIgnoreCase("x")) {
+                checking = false;
+                returnData = enteredData;
+            } else {
+
+                    String[] tab = enteredData.split(" ");
+                    String name = tab[0];
+                    String surname = tab[1];
+
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                    surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+
+                    if (userService.checkingIfUserExists(name, surname)) {
+                        if (checkingIfIsStudent(name, surname)) {
+                            checking = false;
+                            returnData = "" + name + " " + surname;
+                        } else {
+                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
+                        }
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+                        }
+                    }
+
+                }catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                }
+            } while (checking) ;
+        return returnData;
+    }
+
+    public String [] getDataToAddStudentGrade () throws SQLException {
+
+        String[] tab = new String[1];
+        String enteredData = getNameAndSurnameAndCheckForStudent();
+        if (enteredData.equalsIgnoreCase("x")) {
+            tab[0] = enteredData;
+        } else {
+            String[] tabWithNameAndSurname = enteredData.split(" ");
+            String studentName = tabWithNameAndSurname[0];
+            String studentSurname = tabWithNameAndSurname[1];
+            String subject = getSubjectToAddStudentGrade();
+
+            int idStudent = userService.getIdFromUser(studentName, studentSurname);
+            int idSubject = subjectService.getIdFromSubject(subject);
+            tab = new String[4];
+            tab[0] = studentName;
+            tab[1] = studentSurname;
+            tab[2] = subject;
+            tab[3] = String.valueOf(getGradeToAddStudentGrade(idSubject, idStudent));
+
+        }
+        return tab;
+    }
+
+    public String getSubjectToAddStudentGrade () throws SQLException {
+        String subject = "";
+        boolean checking = true;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_11);
+            subject = scanner.nextLine();
+
+            int idSubject = subjectService.getIdFromSubject(subject);
+            if (idSubject > 0) {
+                checking = false;
+            } else {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+            }
+
+        } while (checking);
+        return subject;
+    }
+
+    public int getGradeToAddStudentGrade (int idSubject, int idStudent) throws SQLException {
+        int grade = 0;
+        boolean checking = true;
+        do {
+            try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_12);
+            grade = scanner.nextInt();
+            if (grade > 0 & grade < 7 & !checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)) {
+                checking = false;
+
+            } else {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_8);
+            }
+        } catch (InputMismatchException e) {
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+        }
+
+        } while (checking);
+
+        return grade;
+    }
+
 }
+
+
+
+

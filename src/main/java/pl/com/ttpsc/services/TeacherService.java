@@ -30,73 +30,35 @@ public class TeacherService {
     static final String ASSIGN_TEACHER_TO_CLASS = "UPDATE Classes SET Teacher = ? WHERE ClassName = ?";
     static final String GET_TEACHER_FROM_ID = "SELECT Name, Surname FROM Users WHERE Id = ?";
 
+    public void createTeacher () throws SQLException {
+        String enteredData = userService.getNameAndSurnameFromUser();
+            if (enteredData.equalsIgnoreCase("x")){
+                System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+            } else {
+                String[] tab = enteredData.split(" ");
+                String name = tab[0];
+                String surname = tab[1];
 
-
-    public void createTeacher (){
-        boolean checking = true;
-
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
-            String name = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_2);
-            String surname = scanner.nextLine();
-
-            name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
-            surname = surname.substring(0,1).toUpperCase() + surname.substring(1).toLowerCase();
-
-            try {
-                if (userService.addUserToTheDataBase(Roles.TEACHER, name, surname)){
-                    System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
-                    int idUser = userService.getIdFromUser(name, surname);
-                    userService.insertNewUserIntoLogon(name, surname, idUser);
-                    checking = false;
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                userService.addUserToTheDataBase(Roles.TEACHER, name, surname);
+                System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+                int idUser = userService.getIdFromUser(name, surname);
+                userService.insertNewUserIntoLogon(name, surname, idUser);
             }
-        } while (checking);
-    }
+        }
 
-    public void asssignTeacherToCless (){
-        boolean whileGoes = true;
-
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_6);
-            String teacherName = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_7);
-            String teacherSurname = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_10);
-            String className = scanner.nextLine();
-
-            try {
-                if (userService.checkingIfUserExists(teacherName, teacherSurname)) {
-                    if (checkingIfIsTeacher(teacherName, teacherSurname)) {
-                        int idClass = classService.getIdFromClasses(className);
-                        if (idClass > 0) {
-                            int idTeacher = userService.getIdFromUser(teacherName, teacherSurname);
-                            updateClassAddTeacherId(idTeacher, className);
-                            whileGoes = false;
-                        } else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_5);
-                        }
-
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_6);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
-            }
-        } while (whileGoes);
+    public void asssignTeacherToCless () throws SQLException {
+        String nameAndSurname = getNameAndSurnameAndCheckForTeacher();
+        if (nameAndSurname.equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String[] tab = nameAndSurname.split(" ");
+            String teacherName = tab[0];
+            String teacherSurname = tab[1];
+            String className = getClassName();
+            int idTeacher = userService.getIdFromUser(teacherName, teacherSurname);
+            updateClassAddTeacherId(idTeacher, className);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
 
     public void updateClassAddTeacherId (int idClass, String className) throws SQLException {
@@ -152,7 +114,6 @@ public class TeacherService {
         }
         return list;
     }
-
 
 
     public boolean checkingIfThereIsAnyNewExcuseForTeacher (int idTeacher) throws SQLException {
@@ -353,4 +314,62 @@ public class TeacherService {
         }while (checking);
     }
 
+    public String getNameAndSurnameAndCheckForTeacher () throws SQLException {
+        boolean checking = true;
+        String returnData = "";
+
+        do {
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_6);
+                String enteredData = scanner.nextLine();
+
+                if (enteredData.equalsIgnoreCase("x")) {
+                    checking = false;
+                    returnData = enteredData;
+                } else {
+
+                    String[] tab = enteredData.split(" ");
+                    String name = tab[0];
+                    String surname = tab[1];
+
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                    surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+
+                    if (userService.checkingIfUserExists(name, surname)) {
+                        if (checkingIfIsTeacher(name, surname)) {
+                            checking = false;
+                            returnData = "" + name + " " + surname;
+                        } else {
+                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_6);
+                        }
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+                    }
+                }
+
+            }catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+            }
+        } while (checking) ;
+        return returnData;
+    }
+
+    public String getClassName () throws SQLException {
+        String className = "";
+
+        boolean checking = true;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_10);
+            className = scanner.nextLine();
+            int idClass = classService.getIdFromClasses(className);
+            if (idClass > 0) {
+                checking = false;
+            } else {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+            }
+        }while (checking) ;
+        return className;
+    }
 }

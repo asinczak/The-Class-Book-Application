@@ -1,10 +1,14 @@
 package pl.com.ttpsc.services;
 
+
 import pl.com.ttpsc.data.SettingsAfterLogon;
 
+import java.io.Console;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;

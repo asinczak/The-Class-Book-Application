@@ -1,11 +1,12 @@
 package pl.com.ttpsc.services;
-import org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences;
-import org.sqlite.SQLiteException;
+
 import pl.com.ttpsc.data.Roles;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import java.util.Scanner;
 
 
 public class UserService {
@@ -33,21 +34,15 @@ public class UserService {
 
 
 
-    public boolean addUserToTheDataBase (Roles roles, String name, String surname) throws SQLException {
+    public void addUserToTheDataBase (Roles roles, String name, String surname) throws SQLException {
         String role = String.valueOf(roles);
-        boolean checkingPerson = false;
 
-            if (!checkingIfUserExists(name, surname)) {
-                    int roleId = getRoleIdFromRoles(role);
-                    PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_USER);
-                    preparedStatement.setString(1, name);
-                    preparedStatement.setString(2, surname);
-                    preparedStatement.setInt(3, roleId);
-                    preparedStatement.execute();
-
-                    checkingPerson = true;
-                }
-        return checkingPerson;
+        int roleId = getRoleIdFromRoles(role);
+        PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_USER);
+        preparedStatement.setString(1, name);
+        preparedStatement.setString(2, surname);
+        preparedStatement.setInt(3, roleId);
+        preparedStatement.execute();
     }
 
     public int getRoleIdFromRoles(String role) throws SQLException {
@@ -89,7 +84,7 @@ public class UserService {
     }
 
     public boolean checkingIfUserExists (String name, String surname) throws SQLException {
-        boolean checking;
+        boolean checking = false;
         String nameFromDataBase = "";
         String surnameFromDataBase = "";
 
@@ -105,8 +100,6 @@ public class UserService {
 
         if (name.equals(nameFromDataBase) & surname.equals(surnameFromDataBase)){
             checking = true;
-        } else {
-            checking = false;
         }
 
         return checking;
@@ -162,6 +155,37 @@ public class UserService {
             user = ""+name+" "+surname;
         }
         return user;
+    }
+
+    public String getNameAndSurnameFromUser () throws SQLException {
+        boolean checking = true;
+        String returnData = "";
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_1);
+            String enteredData = scanner.nextLine();
+            if (enteredData.equalsIgnoreCase("x")){
+                checking = false;
+                returnData = enteredData;
+            } else {
+
+                String[] tab = enteredData.split(" ");
+                String name = tab[0];
+                String surname = tab[1];
+
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+
+            if (!checkingIfUserExists(name, surname)) {
+                checking = false;
+                returnData = ""+name+" "+surname;
+            }  else {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
+                }
+            }
+        }while (checking);
+
+        return returnData;
     }
 
 }

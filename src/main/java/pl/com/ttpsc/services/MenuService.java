@@ -99,7 +99,7 @@ public class MenuService {
                             messagesService.manageMessages();
                             break;
                         case 11:
-                            studentService.insertStudentAbsence();
+                            studentService.addAbsenceToStudent();
                             break;
                         case 12:
                             displayService.displayAllGradesOfStudentForStudent();

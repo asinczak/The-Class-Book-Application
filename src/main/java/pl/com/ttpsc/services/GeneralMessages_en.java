@@ -2,12 +2,15 @@ package pl.com.ttpsc.services;
 
 public class GeneralMessages_en {
 
-    static final String ENTER_DATA_1 = "Please enter the name :";
+    static final String ENTER_DATA_1 = "Please enter the name and the surname :"+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_2 = "Please enter the surname :";
-    static final String ENTER_DATA_3 = "Please enter the name of STUDENT to assign :";
+    static final String ENTER_DATA_3 = "Please enter the name and the surname of STUDENT :"+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_4 = "Please enter the surname of STUDENT to assign :";
     static final String ENTER_DATA_5 = "Please enter the name of the class :";
-    static final String ENTER_DATA_6 = "Please enter the name of TEACHER to assign :";
+    static final String ENTER_DATA_6 = "Please enter the name and the surname of TEACHER to assign :"+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_7 = "Please enter the surname of TEACHER to assign :";
     static final String ENTER_DATA_8 = "Please enter the name of CLASS to assign student :";
     static final String ENTER_DATA_9 = "Enter 1 for test :";
@@ -58,7 +61,7 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_39 = "Please enter the number of message you'd like to delete";
 
 
-    static final String WORNING_STATEMENT_1 = "Person with such data already exists !";
+    static final String WORNING_STATEMENT_1 = "Person with such data already exists ! Try again.";
     static final String WORNING_STATEMENT_2 = "Such PERSON doesn't exist! Try again.";
     static final String WORNING_STATEMENT_3 = "Wrong data! Try again";
     static final String WORNING_STATEMENT_4 = "Wrong data! Person is not a student";
@@ -71,6 +74,8 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_11 = "There are no students who have too many absences";
     static final String WORNING_STATEMENT_12 = "You do not have access to such option";
     static final String WORNING_STATEMENT_13 = "Wrong number! Choose one more time!";
+    static final String WORNING_STATEMENT_14 = "System error";
+
 
 
     static final String CORRECT_STATEMENT_1 = "Success! You' ve assigned the STUDENT.";
@@ -119,6 +124,7 @@ public class GeneralMessages_en {
             "\n***********************************************************";
     static final String INFO_STATEMENT_4 = "MESSAGE :";
     static final String INFO_STATEMENT_5 = "There are no new messages ";
+    static final String INFO_STATEMENT_6 = "Exit!";
 
 
 
