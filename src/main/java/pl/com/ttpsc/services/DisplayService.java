@@ -4,6 +4,7 @@ import pl.com.ttpsc.data.SchoolClass;
 import pl.com.ttpsc.data.Student;
 import pl.com.ttpsc.data.User;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -64,29 +65,17 @@ public class DisplayService {
     }
 
     public void displayAllUsers() {
-        try {
-            ResultSet resultSet = UserConverter.selectAllUsers();
-            List<User> list = userConverter.convert(resultSet);
-            System.out.println(list);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<User> list = userConverter.convert();
+        System.out.println(list);
     }
 
     public void displayAllTeachers() {
-        try {
-            ResultSet resultSet = UserConverter.selectAllUsers();
-            List<User> list = userConverter.convert(resultSet);
+            List<User> list = userConverter.convert();
             list.forEach(user -> {
                 if (user.getWhoIs().equals("TEACHER")) {
                     System.out.println(user);
                 }
             });
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public void displayAllClassesAtSchool() {
@@ -209,6 +198,5 @@ public class DisplayService {
             e.printStackTrace();
         }
     }
-
 
 }

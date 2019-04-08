@@ -41,56 +41,29 @@ public class GuardianService {
    String nameStudent = "";
    String surnameStudent = "";
 
-    public void createGuardian (){
+    public void createGuardian () throws SQLException {
 
-            boolean checkingPerson = true;
-        do {
-            Scanner sc = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
-            nameGuardian = sc.nextLine();
+        String enteredDataForGuardian = userService.getNameAndSurnameFromUser();
+        String eneterdDataForStudent = studentService.getNameAndSurnameAndCheckForStudent();
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_2);
-            surnameGuardian = sc.nextLine();
+        if(enteredDataForGuardian.equalsIgnoreCase("x") || eneterdDataForStudent.equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String[] studentData = eneterdDataForStudent.split(" ");
+            nameStudent = studentData[0];
+            surnameStudent = studentData[1];
+            String[] guardianData = enteredDataForGuardian.split(" ");
+            nameGuardian = guardianData[0];
+            surnameGuardian = guardianData[1];
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_3);
-            nameStudent = sc.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_4);
-            surnameStudent = sc.nextLine();
-
-            nameGuardian = nameGuardian.substring(0,1).toUpperCase() + nameGuardian.substring(1).toLowerCase();
-            surnameGuardian = surnameGuardian.substring(0,1).toUpperCase() + surnameGuardian.substring(1).toLowerCase();
-            nameStudent = nameStudent.substring(0,1).toUpperCase() + nameStudent.substring(1).toLowerCase();
-            nameGuardian = nameGuardian.substring(0,1).toUpperCase() + nameGuardian.substring(1).toLowerCase();
-
-            try {
-                if(!userService.checkingIfUserExists(nameGuardian, surnameGuardian)) {
-                    if (userService.checkingIfUserExists(nameStudent, surnameStudent)) {
-                        if (studentService.checkingIfIsStudent(nameStudent, surnameStudent)) {
-                            userService.addUserToTheDataBase(Roles.GUARDIAN, nameGuardian, surnameGuardian);
-                            insertGuardianToStudent();
-                            int idUser = userService.getIdFromUser(nameGuardian, surnameGuardian);
-                            userService.insertNewUserIntoLogon(nameGuardian, surnameGuardian, idUser);
-                            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
-                            checkingPerson = false;
-                        } else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                        }
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
-                }
-
-            } catch (SQLException e) {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
-            }
-
-        } while (checkingPerson);
+            userService.addUserToTheDataBase(Roles.GUARDIAN, nameGuardian, surnameGuardian);
+            insertGuardianToStudent();
+            int idUser = userService.getIdFromUser(nameGuardian, surnameGuardian);
+            userService.insertNewUserIntoLogon(nameGuardian, surnameGuardian, idUser);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
 
     }
-
 
     public void insertGuardianToStudent () throws SQLException {
         PreparedStatement preparedStatement3 = MenuService.getInstance().connection.prepareStatement(INSERT_GUARDIAN_TO_STUDENT);
@@ -113,47 +86,24 @@ public class GuardianService {
         return checking;
     }
 
-    public void asignStudentToGuardian () {
-        boolean checking = true;
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_13);
-            String guardianName = scanner.nextLine();
+    public void asignStudentToGuardian () throws SQLException {
+        String enteredDataForGuardian = getNameAndSurnameForGuardian();
+        String eneterdDataForStudent = studentService.getNameAndSurnameAndCheckForStudent();
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_14);
-            String guardianSurname = scanner.nextLine();
+        if(enteredDataForGuardian.equalsIgnoreCase("x") || eneterdDataForStudent.equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String[] studentData = eneterdDataForStudent.split(" ");
+            nameStudent = studentData[0];
+            surnameStudent = studentData[1];
+            String[] guardianData = enteredDataForGuardian.split(" ");
+            nameGuardian = guardianData[0];
+            surnameGuardian = guardianData[1];
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_3);
-            String studentName = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_4);
-            String studentSurname = scanner.nextLine();
-
-            try {
-                if (userService.checkingIfUserExists(guardianName, guardianSurname)){
-                    if (guardianService.checkingIfIsGuardian(guardianName, guardianSurname)){
-                        if (userService.checkingIfUserExists(studentName, studentSurname)){
-                            if (studentService.checkingIfIsStudent(studentName, studentSurname)){
-                                int idGuardian = userService.getIdFromUser(guardianName, guardianSurname);
-                                updateIdGuardian(idGuardian, studentName, studentSurname);
-                                checking = false;
-                            } else {
-                                System.out.println(GeneralMessages_en.WORNING_STATEMENT_4);
-                            }
-                        } else {
-                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                        }
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_9);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        } while (checking);
+            int idGuardian = userService.getIdFromUser(nameGuardian, surnameGuardian);
+            updateIdGuardian(idGuardian, nameStudent, surnameStudent);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
 
     public void updateIdGuardian (int idGuardian, String studentName, String studentSurname) throws SQLException {
@@ -192,39 +142,69 @@ public class GuardianService {
         return resultSet;
     }
 
-    public void sendAnExcuseToTeacher () {
-        boolean checking = true;
+    public void sendAnExcuseToTeacher () throws SQLException {
+        String enteredDataForTeacher = teacherService.getNameAndSurnameAndCheckForTeacher();
 
-        do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_24);
-            String teacherName = scanner.nextLine();
+        if(enteredDataForTeacher.equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String[] teacherData = enteredDataForTeacher.split(" ");
+            String teacherName = teacherData[0];
+            String teacherSurname = teacherData[1];
+            String excuse = getExcuseFromGuardian();
 
-            System.out.println(GeneralMessages_en.ENTER_DATA_25);
-            String teacherSurname = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_26);
-            String excuse = scanner.nextLine();
-
-            try {
-                if (userService.checkingIfUserExists(teacherName, teacherSurname)) {
-                    if (teacherService.checkingIfIsTeacher(teacherName, teacherSurname)) {
-                        int idGuardian = logonService.getIdUserWhoHasLogged();
-                        int idTeacher = userService.getIdFromUser(teacherName, teacherSurname);
-                        excusesService.insertMessageToTeacher(idGuardian, idTeacher, excuse, "NEW");
-                        checking = false;
-                        System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
-
-                    } else {
-                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_6);
-                    }
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }while (checking);
+            int idGuardian = logonService.getIdUserWhoHasLogged();
+            int idTeacher = userService.getIdFromUser(teacherName, teacherSurname);
+            excusesService.insertMessageToTeacher(idGuardian, idTeacher, excuse, "NEW");
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
 
+    public String getNameAndSurnameForGuardian () throws SQLException {
+        boolean checking = true;
+        String returnData = "";
+
+        do {
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_13);
+                String enteredData = scanner.nextLine();
+
+                if (enteredData.equalsIgnoreCase("x")) {
+                    checking = false;
+                    returnData = enteredData;
+                } else {
+
+                    String[] tab = enteredData.split(" ");
+                    String name = tab[0];
+                    String surname = tab[1];
+
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                    surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+
+                    if (userService.checkingIfUserExists(name, surname)) {
+                        if(checkingIfIsGuardian(name,surname)) {
+                            checking = false;
+                            returnData = "" + name + " " + surname;
+                        } else {
+                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_9);
+                        }
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_2);
+                    }
+                }
+
+            }catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+            }
+        } while (checking) ;
+        return returnData;
+    }
+
+    public String getExcuseFromGuardian () {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(GeneralMessages_en.ENTER_DATA_26);
+        String excuse = scanner.nextLine();
+        return excuse;
+    }
 }

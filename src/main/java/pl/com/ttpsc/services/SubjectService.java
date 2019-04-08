@@ -45,8 +45,6 @@ public class SubjectService {
         return idFromSubject;
     }
 
-
-
     public void insertAbsenceFromSubject (String date, int idStudent, int idSubject) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_ABSENCE_FROM_SUBJECT);
         preparedStatement.setString(1,date );
@@ -55,28 +53,16 @@ public class SubjectService {
         preparedStatement.execute();
     }
 
-    public void setNumberOfLessonsPerYear () {
-        boolean checking = true;
-        do{
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_11);
-            String subject = scanner.nextLine();
-
-            System.out.println(GeneralMessages_en.ENTER_DATA_16);
-            int numberOfLessons = scanner.nextInt();
-
-            try {
-                int idSubject = getIdFromSubject(subject);
-                if (idSubject > 0) {
-                    insertNumberOfLessonsPerYear(numberOfLessons, subject);
-                    checking = false;
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }while (checking);
+    public void setNumberOfLessonsPerYear () throws SQLException {
+        String [] data = getDatatoSetNumberOfLessons();
+        if (data[0].equalsIgnoreCase("x")){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            String subject = data[0];
+            int numberOfLessons = Integer.parseInt(data[1]);
+            insertNumberOfLessonsPerYear(numberOfLessons, subject);
+            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+        }
     }
 
     public void insertNumberOfLessonsPerYear (int numberOfLessons, String subjectName) throws SQLException {
@@ -132,6 +118,37 @@ public class SubjectService {
             }
         }
         return checking;
+    }
+
+    public String [] getDatatoSetNumberOfLessons () throws SQLException {
+        String [] data = new String[1];
+        boolean checking = true;
+        do{
+            Scanner scanner = new Scanner(System.in);
+            System.out.println(GeneralMessages_en.ENTER_DATA_11);
+            String subject = scanner.nextLine();
+
+            if(subject.equalsIgnoreCase("x")){
+                checking = false;
+                data[0] = subject;
+            } else {
+
+                System.out.println(GeneralMessages_en.ENTER_DATA_16);
+                int numberOfLessons = scanner.nextInt();
+
+                int idSubject = getIdFromSubject(subject);
+                if (idSubject > 0) {
+                    data = new String[2];
+                    data [0] = subject;
+                    data [1] = String.valueOf(numberOfLessons);
+                    checking = false;
+                } else {
+                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+                }
+            }
+
+        }while (checking);
+        return data;
     }
 }
 

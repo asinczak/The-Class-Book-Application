@@ -161,27 +161,31 @@ public class UserService {
         boolean checking = true;
         String returnData = "";
         do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_1);
-            String enteredData = scanner.nextLine();
-            if (enteredData.equalsIgnoreCase("x")){
-                checking = false;
-                returnData = enteredData;
-            } else {
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_1);
+                String enteredData = scanner.nextLine();
+                if (enteredData.equalsIgnoreCase("x")) {
+                    checking = false;
+                    returnData = enteredData;
+                } else {
 
-                String[] tab = enteredData.split(" ");
-                String name = tab[0];
-                String surname = tab[1];
+                    String[] tab = enteredData.split(" ");
+                    String name = tab[0];
+                    String surname = tab[1];
 
-            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-            surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
+                    name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                    surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
 
-            if (!checkingIfUserExists(name, surname)) {
-                checking = false;
-                returnData = ""+name+" "+surname;
-            }  else {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
+                    if (!checkingIfUserExists(name, surname)) {
+                        checking = false;
+                        returnData = "" + name + " " + surname;
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_1);
+                    }
                 }
+            } catch (ArrayIndexOutOfBoundsException e){
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
             }
         }while (checking);
 

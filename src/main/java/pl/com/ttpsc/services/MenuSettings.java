@@ -67,6 +67,7 @@ public class MenuSettings {
     }
 
     public void getListOfMenuNumbers () throws SQLException {
+        mapWithMenuForLoggedUser.clear();
         fillAllTablesWithData();
         String roleName = logonService.getRoleNameOfUserWhoHasLogged();
         List <Integer> listOfMenuNumbers = new ArrayList<>();

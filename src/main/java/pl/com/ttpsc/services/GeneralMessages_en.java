@@ -13,18 +13,20 @@ public class GeneralMessages_en {
             "\nor enter: X -> to exit";
     static final String ENTER_DATA_7 = "Please enter the surname of TEACHER to assign :";
     static final String ENTER_DATA_8 = "Please enter the name of CLASS to assign student :";
-    static final String ENTER_DATA_9 = "Enter 1 for test :";
     static final String ENTER_DATA_10 = "Enter the name of class to assign" + "\nChoose one from these:" +
             "\nGeneral, "+"Lingual, "+"Mathematical, "+"Natural-Scientific, "+"Sporting";
     static final String ENTER_DATA_11 = "Please enter the name of subject" + "\nChoose one from theses:"+
-            "\nMaths, Science, Biology, Physics, Chemistry, Geography, History, Physical education, Art, Music, English";
+            "\nMaths, Science, Biology, Physics, Chemistry, Geography, History, Physical education, Art, Music, English"+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_12 = "Enter the grade (from 1-6)";
-    static final String ENTER_DATA_13 = "Please enter the guardian's name :";
+    static final String ENTER_DATA_13 = "Please enter the guardian's name an surname :"+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_14 = "Please enter the guardian's surname :";
     static final String ENTER_DATA_15 = "Please enter the date when student was absent (Format: YYYY-MM-DD) :";
     static final String ENTER_DATA_16 = "Please enter the number of lessons per year :";
     static final String ENTER_DATA_17 = "Please enter login and password :" +
-            "\nLOGIN -> push ENTER (LOGIN: first two letters of name and surname + id, e.g. ToWi3 ";
+            "\nLOGIN -> push ENTER (LOGIN: first two letters of name and surname + id, e.g. ToWi3 "+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_18 = "PASSWORD -> push ENTER (DEFAULT PASSWORD: 123)";
     static final String ENTER_DATA_19 = "Enter new password :";
     static final String ENTER_DATA_20 = "Enter login :"+
@@ -34,7 +36,8 @@ public class GeneralMessages_en {
             "\nnew password must have at least 6 characters, 1 upper case, 1 lower case and 1 special character. ";
     static final String ENTER_DATA_23 = "Enter: \nON -> turn on checking format password" +
             "\nOFF -> turn off checking password";
-    static final String ENTER_DATA_24 = "Please enter the teacher's name :";
+    static final String ENTER_DATA_24 = "Please enter the teacher's name and surname :"+
+            "\nor enter: X -> to exit";
     static final String ENTER_DATA_25 = "Please enter the teacher's surname :";
     static final String ENTER_DATA_26 = "Please enter the excuse";
     static final String ENTER_DATA_27 = "Please enter 1 -> to approve an excuse" +
@@ -108,7 +111,7 @@ public class GeneralMessages_en {
     static final String MENU_FUNCTION_20 = " -> Excuse (verify) students absence.";
     static final String MENU_FUNCTION_21 = " -> Create new teacher.";
     static final String MENU_FUNCTION_22 = " -> Display all persons in system.";
-    static final String MENU_FUNCTION_23 = " -> Assign teacher to class.";
+    static final String MENU_FUNCTION_23 = " -> Change teacher's assignment to another class.";
     static final String MENU_FUNCTION_24 = " -> Display all classes + students.";
     static final String MENU_FUNCTION_25 = " -> Set number of lessons per year.";
     static final String MENU_FUNCTION_26 = " -> Display all teacher.";
@@ -125,7 +128,6 @@ public class GeneralMessages_en {
     static final String INFO_STATEMENT_4 = "MESSAGE :";
     static final String INFO_STATEMENT_5 = "There are no new messages ";
     static final String INFO_STATEMENT_6 = "Exit!";
-
-
+    static final String INFO_STATEMENT_7 = "LIST OF ALL USERS";
 
 }

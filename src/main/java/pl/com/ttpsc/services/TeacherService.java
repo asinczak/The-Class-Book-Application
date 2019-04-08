@@ -46,7 +46,7 @@ public class TeacherService {
             }
         }
 
-    public void asssignTeacherToCless () throws SQLException {
+    public void makeNewAssigmentToClassForTeacher() throws SQLException {
         String nameAndSurname = getNameAndSurnameAndCheckForTeacher();
         if (nameAndSurname.equalsIgnoreCase("x")){
             System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
@@ -372,4 +372,5 @@ public class TeacherService {
         }while (checking) ;
         return className;
     }
+
 }

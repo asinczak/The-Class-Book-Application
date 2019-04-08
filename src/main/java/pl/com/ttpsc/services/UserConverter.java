@@ -26,9 +26,9 @@ public class UserConverter {
 
     static List <User> list = new ArrayList<>();
 
-    public List <User> convert (ResultSet resultSet) {
+    public List <User> convert () {
         try {
-            resultSet = selectAllUsers();
+            ResultSet resultSet = selectAllUsers();
             while (resultSet.next()){
                 String name = resultSet.getString("Name");
                 String surname = resultSet.getString("Surname");
