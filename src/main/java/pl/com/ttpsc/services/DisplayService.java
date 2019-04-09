@@ -34,8 +34,8 @@ public class DisplayService {
 
 
     public void displayAllGradesOfStudentForStudent() throws SQLException {
-
-            ResultSet resultSet = studentService.getAllGradesOfStudent();
+        int idStudent = logonService.getIdUserWhoHasLogged();
+            ResultSet resultSet = studentService.getAllGradesOfStudent(idStudent);
             while (resultSet.next()) {
                 int idSubject = resultSet.getInt("IdSubject");
                 int grade = resultSet.getInt("Grade");

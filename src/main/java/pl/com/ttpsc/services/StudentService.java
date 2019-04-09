@@ -80,7 +80,7 @@ public class StudentService {
     public void addStudentGrade () throws SQLException {
         String[] tab = getDataToAddStudentGrade();
 
-        if(tab[0].equalsIgnoreCase("x")){
+        if(tab[0].equalsIgnoreCase("x") || tab[3].equalsIgnoreCase("987654")){
             System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
         } else {
             String name = tab[0];
@@ -129,9 +129,7 @@ public class StudentService {
         preparedStatement.execute();
     }
 
-    public ResultSet getAllGradesOfStudent () throws SQLException {
-        int idStudent = logonService.getIdUserWhoHasLogged();
-
+    public ResultSet getAllGradesOfStudent (int idStudent) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELSECT_ALL_GRADES_OF_STUDENT);
         preparedStatement.setInt(1, idStudent);
 
@@ -205,8 +203,8 @@ public class StudentService {
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
             int idSubjectFromBase = resultSet.getInt("IdSubject");
-            int gradeFromBase = resultSet.getInt("Grade");
-            if (idSubject == idSubjectFromBase & grade == gradeFromBase){
+
+            if (idSubject == idSubjectFromBase){
                 checking = true;
             }
         }
@@ -399,7 +397,11 @@ public class StudentService {
             Scanner scanner = new Scanner(System.in);
             System.out.println(GeneralMessages_en.ENTER_DATA_12);
             grade = scanner.nextInt();
-            if (grade > 0 & grade < 7 & !checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)) {
+            if (checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)){
+                checking = false;
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_18);
+                grade = 987654;
+            }else if (grade > 0 & grade < 7){
                 checking = false;
 
             } else {

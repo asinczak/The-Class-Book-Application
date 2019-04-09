@@ -13,11 +13,11 @@ public class GeneralMessages_en {
             "\nor enter: X -> to exit";
     static final String ENTER_DATA_7 = "Please enter the surname of TEACHER to assign :";
     static final String ENTER_DATA_8 = "Please enter the name of CLASS to assign student :";
-    static final String ENTER_DATA_10 = "Enter the name of class to assign" + "\nChoose one from these:" +
+    static final String ENTER_DATA_10 = "Enter the name of class" + "\nChoose one from these:" +
             "\nGeneral, "+"Lingual, "+"Mathematical, "+"Natural-Scientific, "+"Sporting";
     static final String ENTER_DATA_11 = "Please enter the name of subject" + "\nChoose one from theses:"+
-            "\nMaths, Science, Biology, Physics, Chemistry, Geography, History, Physical education, Art, Music, English"+
-            "\nor enter: X -> to exit";
+            "\nMaths, Science, Biology, Physics, Chemistry, Geography, History, Physical education, Art, Music, English";
+
     static final String ENTER_DATA_12 = "Enter the grade (from 1-6)";
     static final String ENTER_DATA_13 = "Please enter the guardian's name an surname :"+
             "\nor enter: X -> to exit";
@@ -63,6 +63,8 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_37 = "Please enter the message";
     static final String ENTER_DATA_38 = "Please enter the number of message you'd like to replay";
     static final String ENTER_DATA_39 = "Please enter the number of message you'd like to delete";
+    static final String ENTER_DATA_40 = "Please enter the names and surnames of students (separated with comas)"+
+            "\ne.g. Leszek Żukowski, Tomasz Kowalski, Pszczółka Maja";
 
 
     static final String WORNING_STATEMENT_1 = "Person with such data already exists ! Try again.";
@@ -80,6 +82,9 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_13 = "Wrong number! Choose one more time!";
     static final String WORNING_STATEMENT_14 = "System error";
     static final String WORNING_STATEMENT_15 = "Error trying to access data base";
+    static final String WORNING_STATEMENT_16 = "Error trying to enter password";
+    static final String WORNING_STATEMENT_17 = "Error trying to generate certificate";
+    static final String WORNING_STATEMENT_18 = "Student already has a grade from this subject";
 
 
 

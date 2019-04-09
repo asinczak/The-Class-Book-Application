@@ -2,6 +2,10 @@ package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.SettingsAfterLogon;
 import pl.com.ttpsc.data.User;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,19 +58,23 @@ public class LogonService {
     }
 
     public boolean logging () throws SQLException {
+
         displayAllUsersAndLoginsWithPassswords();
         String loggingData = getDataToLogOn();
-        if (loggingData.equalsIgnoreCase("x")){
-            return false;
-        } else {
-            String[] tab = loggingData.split(" ");
-            String login = tab[0];
-            String password = tab[1];
 
-            setWhoIsLogged(login, password);
-            System.out.println(GeneralMessages_en.CORRECT_STATEMENT_3);
-        }
-        return true;
+                if (loggingData.equalsIgnoreCase("x")) {
+                    return false;
+
+                } else {
+                    String[] tab = loggingData.split(" ");
+                    String login = tab[0];
+                    String password = tab[1];
+
+                    setWhoIsLogged(login, password);
+                    System.out.println(GeneralMessages_en.CORRECT_STATEMENT_3);
+                    return true;
+
+                }
     }
 
     public void updatePassword (int idUser, String newPassword) throws SQLException {
@@ -185,24 +193,25 @@ public class LogonService {
         String loggingData = "";
         boolean checking = true;
         do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_17);
-            String login = scanner.nextLine();
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_17);
+                String login = scanner.nextLine();
 
-            if (login.equalsIgnoreCase("x")){
-                checking = false;
-                loggingData = login;
-            } else {
+                if (login.equalsIgnoreCase("x")) {
+                    checking = false;
+                    loggingData = login;
+                } else {
                 System.out.println(GeneralMessages_en.ENTER_DATA_18);
                 String password = scanner.nextLine();
+//                    String password = getPasswordFromUser(GeneralMessages_en.ENTER_DATA_18);
 
-                if (checkingIfLogonIsCorrect(login, password)) {
-                    loggingData = "" + login + " " + password;
-                    checking = false;
-                } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                    if (checkingIfLogonIsCorrect(login, password)) {
+                        loggingData = "" + login + " " + password;
+                        checking = false;
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                    }
                 }
-            }
         } while (checking);
         return loggingData;
     }
@@ -264,5 +273,52 @@ public class LogonService {
         }
         System.out.println("===================================================");
     }
+
+//    public String getPasswordFromUser (String text){
+//        String password = "";
+//        System.out.println(text);
+//        EraserThread eraserThread = new EraserThread();
+//        Thread mask = new Thread(eraserThread);
+//
+//
+//        mask.start();
+//        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+//
+//        try {
+//            password = input.readLine();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        eraserThread.stopMasking();
+//        System.out.println("The password entered is: "+password);
+//
+//        return password;
+//    }
+//
+//    class EraserThread implements Runnable {
+//        private boolean stop;
+//
+////        public EraserThread(String text) {
+////            System.out.print(text);
+////        }
+//
+//        public void run () {
+//            stop = true;
+//            while (stop){
+//                System.out.print("\010*");
+//                try {
+//                    Thread.currentThread().sleep(1);
+//                } catch(InterruptedException ie) {
+//                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_16);
+//                }
+//            }
+//        }
+//
+//        public void stopMasking() {
+//            this.stop = false;
+//        }
+//    }
 
 }

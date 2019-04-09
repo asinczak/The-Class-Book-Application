@@ -1,5 +1,9 @@
 package pl.com.ttpsc.services;
 
+import com.itextpdf.text.DocumentException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -68,10 +72,10 @@ public class MenuService {
                                 pdfService.generateStudentCertificate();
                                 break;
                             case 7:
-
+                                pdfService.generateCertificatesForAllStudentsInClass();
                                 break;
                             case 8:
-
+                                pdfService.generateCertificatesForChosenStudents();
                                 break;
                             case 9:
                                 guardianService.asignStudentToGuardian();
@@ -156,7 +160,17 @@ public class MenuService {
         } catch (SQLException e) {
             System.out.println(GeneralMessages_en.WORNING_STATEMENT_15);
         }
+    catch (FileNotFoundException e){
+        e.printStackTrace();
     }
+    catch (DocumentException e){
+        e.printStackTrace();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 
     public void displayMessageForTeacher () throws SQLException {
         int idTeacher = logonService.getIdUserWhoHasLogged();
