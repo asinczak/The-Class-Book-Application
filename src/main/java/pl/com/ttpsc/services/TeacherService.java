@@ -2,7 +2,6 @@ package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.Roles;
 import pl.com.ttpsc.data.SchoolClass;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -94,9 +93,8 @@ public class TeacherService {
         return checking;
     }
 
-    public List<SchoolClass> getListClassWithTeacher () {
+    public List<SchoolClass> getListClassWithTeacher () throws SQLException {
         List <SchoolClass> list = new ArrayList<>();
-        try {
             ResultSet resultSet = classService.getClassAndTeacher();
             while (resultSet.next()){
                 String className = resultSet.getString("ClassName");
@@ -109,12 +107,8 @@ public class TeacherService {
                 schoolClass.setStudentList(classService.getListOfStudentfromIdClass(idClass));
                 list.add(schoolClass);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return list;
     }
-
 
     public boolean checkingIfThereIsAnyNewExcuseForTeacher (int idTeacher) throws SQLException {
         boolean checking = false;
@@ -155,15 +149,14 @@ public class TeacherService {
 
     }
 
-
     public void verifyStudentsAbsence() throws SQLException {
         int idTeacher = logonService.getIdUserWhoHasLogged();
+        displayAllMessagesFromExcuses(idTeacher);
         boolean checking = true;
         do {
             Scanner scanner = new Scanner(System.in);
             System.out.println(GeneralMessages_en.ENTER_DATA_27);
             int number = scanner.nextInt();
-
 
             switch (number) {
                 case 1:
@@ -172,6 +165,9 @@ public class TeacherService {
                     break;
                 case 2:
                     discardStudentsAbsence(idTeacher);
+                    checking = false;
+                    break;
+                case 3:
                     checking = false;
                     break;
                 default:

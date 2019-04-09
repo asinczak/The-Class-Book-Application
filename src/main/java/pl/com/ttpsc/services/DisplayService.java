@@ -3,8 +3,6 @@ package pl.com.ttpsc.services;
 import pl.com.ttpsc.data.SchoolClass;
 import pl.com.ttpsc.data.Student;
 import pl.com.ttpsc.data.User;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,8 +33,8 @@ public class DisplayService {
     ExcusesService excusesService = ExcusesService.getInstance();
 
 
-    public void displayAllGradesOfStudentForStudent() {
-        try {
+    public void displayAllGradesOfStudentForStudent() throws SQLException {
+
             ResultSet resultSet = studentService.getAllGradesOfStudent();
             while (resultSet.next()) {
                 int idSubject = resultSet.getInt("IdSubject");
@@ -44,14 +42,11 @@ public class DisplayService {
                 String subjectName = subjectService.getSubjectFromId(idSubject);
                 System.out.println(subjectName + ": " + grade);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void displayAllStudentAbsencesForStudent() {
+    public void displayAllStudentAbsencesForStudent() throws SQLException {
         int idStudent = logonService.getIdUserWhoHasLogged();
-        try {
+
             ResultSet resultSet = studentService.getAllStudentAbsences(idStudent);
             while (resultSet.next()) {
                 String date = resultSet.getString("DateAbsence");
@@ -59,17 +54,14 @@ public class DisplayService {
                 String subjectName = subjectService.getSubjectFromId(idSubject);
                 System.out.println(subjectName + ": " + date);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void displayAllUsers() {
+    public void displayAllUsers() throws SQLException {
         List<User> list = userConverter.convert();
         System.out.println(list);
     }
 
-    public void displayAllTeachers() {
+    public void displayAllTeachers() throws SQLException {
             List<User> list = userConverter.convert();
             list.forEach(user -> {
                 if (user.getWhoIs().equals("TEACHER")) {
@@ -78,7 +70,7 @@ public class DisplayService {
             });
     }
 
-    public void displayAllClassesAtSchool() {
+    public void displayAllClassesAtSchool() throws SQLException {
 
         List<SchoolClass> list = teacherService.getListClassWithTeacher();
         for (int i = 0; i < list.size(); i++) {
@@ -92,10 +84,9 @@ public class DisplayService {
         }
     }
 
-    public void displayAllGradesOfStudentForGuardian() {
+    public void displayAllGradesOfStudentForGuardian() throws SQLException {
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
-        try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
             for (Student student : studentList) {
                 String studentName = student.getName();
@@ -112,15 +103,11 @@ public class DisplayService {
                 }
 
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void displayAllAbsencesOfStudentForGuardian() {
+    public void displayAllAbsencesOfStudentForGuardian() throws SQLException {
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
-        try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
             for (Student student : studentList) {
                 String studentName = student.getName();
@@ -136,15 +123,11 @@ public class DisplayService {
                     System.out.println(subjectName + ": " + date);
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void displayStudentsWithTooLowGrades() {
+    public void displayStudentsWithTooLowGrades() throws SQLException {
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
-        try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
             for (Student student : studentList) {
                 String studentName = student.getName();
@@ -163,16 +146,12 @@ public class DisplayService {
                 }
 
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void displayIfStudentsHaveTooManyAbsences() {
+    public void displayIfStudentsHaveTooManyAbsences() throws SQLException {
         boolean checking = true;
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
-        try {
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
             for (Student student : studentList) {
                 String studentName = student.getName();
@@ -194,9 +173,6 @@ public class DisplayService {
                 if (checking){
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_11);
                 }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+            }
 
 }

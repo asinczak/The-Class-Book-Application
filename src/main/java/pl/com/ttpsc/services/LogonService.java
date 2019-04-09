@@ -2,9 +2,6 @@ package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.SettingsAfterLogon;
 import pl.com.ttpsc.data.User;
-
-import java.io.Console;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -135,17 +132,13 @@ public class LogonService {
 
     }
 
-    public void mainChangingPassword () {
-        try {
+    public void mainChangingPassword () throws SQLException {
             if (settingService.selectValueFromSettings().equals("ON")){
                 changingPasswordWithChecking();
             } else {
                 changingPasswordWithoutChecking();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-    }
 
     public void setWhoIsLogged (String login, String password) throws SQLException {
         int idUser = selectIdUserFromLogon(login,password);

@@ -22,22 +22,18 @@ public class SettingService {
     static final String SELECT_VALUE_FROM_SETTINGS = "SELECT Value FROM Settings WHERE Key = ?";
     final String KEY_SETTINGS_1 = "CheckingFormat";
 
-    public void turnOnOffCheckingPassword () {
+    public void turnOnOffCheckingPassword () throws SQLException {
         boolean checking = true;
         do {
             Scanner scanner = new Scanner(System.in);
             System.out.println(GeneralMessages_en.ENTER_DATA_23);
             String changing = scanner.nextLine();
-            try {
                 if (changing.equals("ON") | changing.equals("OFF")) {
                     updateSettings(changing);
                     checking = false;
                 System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
             } else {
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
-            }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }while (checking);
     }

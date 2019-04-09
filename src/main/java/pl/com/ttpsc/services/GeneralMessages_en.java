@@ -41,7 +41,8 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_25 = "Please enter the teacher's surname :";
     static final String ENTER_DATA_26 = "Please enter the excuse";
     static final String ENTER_DATA_27 = "Please enter 1 -> to approve an excuse" +
-            "\nPlease enter 2 -> to discard an excuse";
+            "\nPlease enter 2 -> to discard an excuse"+
+            "\nPlease enter 3 -> to exit";
     static final String ENTER_DATA_28 = "Please enter the message number to discard";
     static final String ENTER_DATA_29 = "Please enter the message number to approve";
     static final String ENTER_DATA_30 = "Please enter the student's name :";
@@ -78,6 +79,7 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_12 = "You do not have access to such option";
     static final String WORNING_STATEMENT_13 = "Wrong number! Choose one more time!";
     static final String WORNING_STATEMENT_14 = "System error";
+    static final String WORNING_STATEMENT_15 = "Error trying to access data base";
 
 
 
@@ -121,9 +123,9 @@ public class GeneralMessages_en {
     static final String MENU_FUNCTION_30 = " -> Log out.";
 
     static final String INFO_STATEMENT_1 = "EXCUSE :";
-    static final String INFO_STATEMENT_2 = " !!! YOU HAVE NEW EXCUSES, PLEASE CHECK (option nr 29)"+
+    static final String INFO_STATEMENT_2 = " !!! YOU HAVE NEW EXCUSES, PLEASE CHECK (option nr 14)"+
             "\n***********************************************************";
-    static final String INFO_STATEMENT_3 = " !!! YOU HAVE NEW MESSAGES, PLEASE CHECK (option nr 10)"+
+    static final String INFO_STATEMENT_3 = " !!! YOU HAVE NEW MESSAGES, PLEASE CHECK"+
             "\n***********************************************************";
     static final String INFO_STATEMENT_4 = "MESSAGE :";
     static final String INFO_STATEMENT_5 = "There are no new messages ";

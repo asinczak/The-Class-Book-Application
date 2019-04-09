@@ -154,7 +154,7 @@ public class MenuService {
                 System.out.println(GeneralMessages_en.CORRECT_STATEMENT_6);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_15);
         }
     }
 

@@ -1,7 +1,6 @@
 package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.Roles;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,8 +95,6 @@ public class StudentService {
         }
     }
 
-
-
     public void insertGradeToStudent (int idSubject, int idStudent, int grade) throws SQLException {
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(INSERT_GRADE_TO_STUDENT);
         preparedStatement.setInt(1, idSubject);
@@ -148,7 +145,6 @@ public class StudentService {
         preparedStatement.setInt(1, idStudent);
 
         ResultSet resultSet = preparedStatement.executeQuery();
-
         return resultSet;
     }
 
@@ -200,7 +196,6 @@ public class StudentService {
             System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
         }
     }
-
 
     public  boolean checkingIfStudenthasSuchGrade (int idStudent, int grade, int idSubject) throws SQLException {
         boolean checking = false;

@@ -1,13 +1,10 @@
 package pl.com.ttpsc.services;
 
 import pl.com.ttpsc.data.Roles;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.Scanner;
-
 
 public class UserService {
 

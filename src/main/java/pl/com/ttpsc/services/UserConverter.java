@@ -26,8 +26,7 @@ public class UserConverter {
 
     static List <User> list = new ArrayList<>();
 
-    public List <User> convert () {
-        try {
+    public List <User> convert () throws SQLException {
             ResultSet resultSet = selectAllUsers();
             while (resultSet.next()){
                 String name = resultSet.getString("Name");
@@ -40,9 +39,6 @@ public class UserConverter {
                 user.setWhoIs(whoIs);
                 list.add(user);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return list;
     }
 
