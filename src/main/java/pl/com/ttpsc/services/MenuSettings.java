@@ -1,5 +1,4 @@
 package pl.com.ttpsc.services;
-
 import java.sql.SQLException;
 import java.util.*;
 
@@ -18,18 +17,84 @@ public class MenuSettings {
 
     LogonService logonService = LogonService.getInstance();
 
-   private Map <String, String> mapWithRoles = new HashMap<>();
+   private Map <String, List<Integer>> mapWithRoles = new HashMap<>();
 
    private Map <Integer, String> mapWithOptionMenu= new HashMap<>();
 
    private Map <Integer, Integer> mapWithMenuForLoggedUser = new LinkedHashMap<>();
 
     public void fillMapWithRoles() throws SQLException {
-            mapWithRoles.put("STUDENT", "10 12 13 27 30");
-            mapWithRoles.put("GUARDIAN", "10 14 15 16 17 18 19 27 30");
-            mapWithRoles.put("TEACHER", "1 2 3 4 5 6 7 8 9 10 11 20 27 29 30");
-            mapWithRoles.put("PRINCIPAL", "10 21 22 23 24 25 26 27 30");
-            mapWithRoles.put("ADMIN", "10 27 30");
+            mapWithRoles.put("STUDENT", fillStudentMap());
+            mapWithRoles.put("GUARDIAN", fillGuardianMap());
+            mapWithRoles.put("TEACHER", fillTeacherMap());
+            mapWithRoles.put("PRINCIPAL", fillPrincipalMap());
+            mapWithRoles.put("ADMIN", fillAdminMap());
+    }
+
+    public List<Integer> fillStudentMap (){
+        List <Integer> list = new ArrayList<>();
+        list.add(10);
+        list.add(12);
+        list.add(13);
+        list.add(27);
+        list.add(30);
+        return list;
+    }
+
+    public List<Integer> fillGuardianMap (){
+        List <Integer> list = new ArrayList<>();
+        list.add(10);
+        list.add(14);
+        list.add(15);
+        list.add(16);
+        list.add(17);
+        list.add(18);
+        list.add(19);
+        list.add(27);
+        list.add(30);
+        return list;
+    }
+
+    public List<Integer> fillTeacherMap () {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        list.add(6);
+        list.add(7);
+        list.add(8);
+        list.add(9);
+        list.add(10);
+        list.add(11);
+        list.add(20);
+        list.add(27);
+        list.add(29);
+        list.add(30);
+        return list;
+    }
+
+    public List<Integer> fillPrincipalMap (){
+        List <Integer> list = new ArrayList<>();
+        list.add(10);
+        list.add(21);
+        list.add(22);
+        list.add(23);
+        list.add(24);
+        list.add(25);
+        list.add(26);
+        list.add(27);
+        list.add(30);
+        return list;
+    }
+
+    public List<Integer> fillAdminMap (){
+        List <Integer> list = new ArrayList<>();
+        list.add(10);
+        list.add(27);
+        list.add(30);
+        return list;
     }
 
     public void fillMapWithOptionMenu () {
@@ -63,23 +128,19 @@ public class MenuSettings {
         mapWithOptionMenu.put(28, GeneralMessages_en.MENU_FUNCTION_28);
         mapWithOptionMenu.put(29, GeneralMessages_en.MENU_FUNCTION_29);
         mapWithOptionMenu.put(30, GeneralMessages_en.MENU_FUNCTION_30);
-
     }
 
     public void getListOfMenuNumbers () throws SQLException {
         mapWithMenuForLoggedUser.clear();
         fillAllTablesWithData();
         String roleName = logonService.getRoleNameOfUserWhoHasLogged();
-        List <Integer> listOfMenuNumbers = new ArrayList<>();
         for (String role : mapWithRoles.keySet()) {
             if (role.equals(roleName)) {
-                String menuNumbers = mapWithRoles.get(role);
+                List<Integer> listWithMenuOptions = mapWithRoles.get(role);
                 int indeks = 0;
-                String tab[] = menuNumbers.split(" +");
-                for (String number : tab) {
-                    listOfMenuNumbers.add(Integer.parseInt(number));
+                for (int number : listWithMenuOptions) {
                     indeks++;
-                    mapWithMenuForLoggedUser.put(indeks, Integer.valueOf(number));
+                    mapWithMenuForLoggedUser.put(indeks, number);
                 }
             }
         }

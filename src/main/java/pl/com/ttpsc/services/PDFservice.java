@@ -5,8 +5,8 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import pl.com.ttpsc.data.Student;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -34,6 +34,7 @@ public class PDFservice {
     SubjectService subjectService = SubjectService.getInstance();
     TeacherService teacherService = TeacherService.getInstance();
     ClassService classService = ClassService.getInstance();
+    GuardianService guardianService = GuardianService.getInstance();
 
     private static String STUDENT_CERTIFICATE;
     private static final String REPORT = "ReportOfStudents.pdf";
@@ -48,11 +49,11 @@ public class PDFservice {
         Font font26green = new Font(baseFont, 26, 1, BaseColor.GREEN);
         Font font16green = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.GREEN);
 
-        Paragraph certficate = new Paragraph("Certificate", font36red);
+        Paragraph certficate = new Paragraph(GeneralMessages_en.PDF_STATEMENT_1, font36red);
         certficate.setAlignment(Element.ALIGN_CENTER);
         document.add(certficate);
 
-        Paragraph word =new Paragraph("for", font16green);
+        Paragraph word =new Paragraph(GeneralMessages_en.PDF_STATEMENT_2, font16green);
         word.setAlignment(Element.ALIGN_CENTER);
         document.add(word);
 
@@ -69,11 +70,11 @@ public class PDFservice {
         float[] columnWidths = {1f, 1f};
         table.setWidths(columnWidths);
 
-        PdfPCell cell1 = new PdfPCell(new Paragraph("Subject"));
+        PdfPCell cell1 = new PdfPCell(new Paragraph(GeneralMessages_en.PDF_STATEMENT_3));
         cell1.setBorderColor(BaseColor.DARK_GRAY);
         cell1.setPaddingLeft(50);
 
-        PdfPCell cell2 = new PdfPCell(new Paragraph("Grade"));
+        PdfPCell cell2 = new PdfPCell(new Paragraph(GeneralMessages_en.PDF_STATEMENT_4));
         cell2.setBorderColor(BaseColor.DARK_GRAY);
         cell2.setPaddingLeft(50);
 
@@ -90,7 +91,7 @@ public class PDFservice {
 
         document.add(table);
 
-        String place = "Lodz";
+        String place = GeneralMessages_en.PDF_STATEMENT_5;
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -170,7 +171,7 @@ public class PDFservice {
         }
     }
 
-    public void createReportForStudentsWhoWillFail () throws IOException, DocumentException {
+    public void createReportForStudentsWhoWillFail () throws IOException, DocumentException, SQLException {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(REPORT));
         document.open();
@@ -179,22 +180,93 @@ public class PDFservice {
 
         Font font26green = new Font(baseFont, 20);
 
-        Paragraph headline = new Paragraph("Report of students who are going to fail promotion", font26green);
+        Paragraph headline = new Paragraph(GeneralMessages_en.PDF_STATEMENT_6, font26green);
         headline.setAlignment(Element.ALIGN_CENTER);
         document.add(headline);
 
-        PdfPTable table = new PdfPTable(2);
-        table.setWidthPercentage(50);
-        table.setSpacingBefore(80f);
-        table.setSpacingAfter(10f);
+        PdfPTable tableWithTooLowGrades = new PdfPTable(1);
+        tableWithTooLowGrades.setWidthPercentage(50);
+        tableWithTooLowGrades.setSpacingBefore(80f);
+        tableWithTooLowGrades.setSpacingAfter(10f);
 
-        float[] columnWidths = {1f, 1f};
-        table.setWidths(columnWidths);
+        float[] columnWidths = {1f};
+        tableWithTooLowGrades.setWidths(columnWidths);
 
-        PdfPCell cell1 = new PdfPCell(new Paragraph("Fail because of too many absences"));
-        PdfPCell cell2 = new PdfPCell(new Paragraph("Fail because of too low grades"));
 
-        table.addCell(cell1);
-        table.addCell(cell2);
+        PdfPCell cell2 = new PdfPCell(new Paragraph(GeneralMessages_en.PDF_STATEMENT_8));
+        tableWithTooLowGrades.addCell(cell2);
+
+        List <String> listWithTooLowGrades = getListOfStudentsWhoHaveTooLowGrades();
+        for (String data : listWithTooLowGrades){
+            tableWithTooLowGrades.addCell(data);
+        }
+
+        document.add(tableWithTooLowGrades);
+
+        PdfPTable tableWithTooManyAbsences = new PdfPTable(1);
+        tableWithTooManyAbsences.setWidthPercentage(50);
+        tableWithTooManyAbsences.setSpacingBefore(80f);
+        tableWithTooManyAbsences.setSpacingAfter(10f);
+
+        float[] columnWidths2 = {1f};
+        tableWithTooManyAbsences.setWidths(columnWidths2);
+
+        PdfPCell cell1 = new PdfPCell(new Paragraph(GeneralMessages_en.PDF_STATEMENT_7));
+        tableWithTooManyAbsences.addCell(cell1);
+
+        List <String> listWithTooManyAbsences = getListOfStudentsWhoHaveTooManyAbsences();
+        for (String data : listWithTooManyAbsences){
+            tableWithTooManyAbsences.addCell(data);
+        }
+
+        document.add(tableWithTooManyAbsences);
+
+        document.close();
+    }
+
+    public List <String> getListOfStudentsWhoHaveTooLowGrades () throws SQLException {
+        int idGuardian = logonService.getIdUserWhoHasLogged();
+        List <String> listOfStudentsWithTooLowGrades = new ArrayList<>();
+
+        List<Student> studentList = guardianService.getListOfStudents(idGuardian);
+        for (Student student : studentList) {
+            String studentName = student.getName();
+            String studentSurname = student.getSurname();
+
+            int idStudent = userService.getIdFromUser(studentName, studentSurname);
+            ResultSet resultSet = guardianService.selectGradesFromAssignStudent(idStudent);
+            while (resultSet.next()) {
+                String subject = resultSet.getString("SubjectName");
+                int grade = resultSet.getInt("Grade");
+                if (grade < 3) {
+                    String data = ""+studentName+" "+studentSurname+"- "+subject+": "+grade;
+                    listOfStudentsWithTooLowGrades.add(data);
+                }
+            }
+        }
+        return listOfStudentsWithTooLowGrades;
+    }
+
+    public List <String> getListOfStudentsWhoHaveTooManyAbsences () throws SQLException {
+        int idGuardian = logonService.getIdUserWhoHasLogged();
+        List<String> listOfStudentsWithTooManyAbsences  = new ArrayList<>();
+
+        List<Student> studentList = guardianService.getListOfStudents(idGuardian);
+        for (Student student : studentList) {
+            String studentName = student.getName();
+            String studentSurname = student.getSurname();
+
+            int idStudent = userService.getIdFromUser(studentName, studentSurname);
+            Map <String, Integer> map = studentService.getMapOfAbsencesOfStudent(idStudent);
+            for (String key : map.keySet()){
+                Integer value = map.get(key);
+                int numberOfLessons = subjectService.getNumberOfLessonsForSubject(key);
+                if(value > numberOfLessons * 0.20){
+                    String data = ""+studentName+" "+studentSurname+": "+key;
+                   listOfStudentsWithTooManyAbsences.add(data);
+                }
+            }
+        }
+        return listOfStudentsWithTooManyAbsences;
     }
 }

@@ -105,7 +105,7 @@ public class MenuService {
                                 displayService.displayIfStudentsHaveTooManyAbsences();
                                 break;
                             case 18:
-
+                                pdfService.createReportForStudentsWhoWillFail();
                                 break;
                             case 19:
                                 guardianService.sendAnExcuseToTeacher();
@@ -158,16 +158,16 @@ public class MenuService {
                 System.out.println(GeneralMessages_en.CORRECT_STATEMENT_6);
             }
         } catch (SQLException e) {
-            System.out.println(GeneralMessages_en.WORNING_STATEMENT_15);
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_15);;
         }
     catch (FileNotFoundException e){
-        e.printStackTrace();
+        System.out.println(GeneralMessages_en.WORNING_STATEMENT_17);
     }
     catch (DocumentException e){
-        e.printStackTrace();
+        System.out.println(GeneralMessages_en.WORNING_STATEMENT_17);
         }
         catch (IOException e){
-            e.printStackTrace();
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_17);
         }
     }
 

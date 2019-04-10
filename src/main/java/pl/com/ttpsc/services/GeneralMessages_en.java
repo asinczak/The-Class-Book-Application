@@ -83,7 +83,7 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_14 = "System error";
     static final String WORNING_STATEMENT_15 = "Error trying to access data base";
     static final String WORNING_STATEMENT_16 = "Error trying to enter password";
-    static final String WORNING_STATEMENT_17 = "Error trying to generate certificate";
+    static final String WORNING_STATEMENT_17 = "Error trying to generate document";
     static final String WORNING_STATEMENT_18 = "Student already has a grade from this subject";
 
 
@@ -136,5 +136,14 @@ public class GeneralMessages_en {
     static final String INFO_STATEMENT_5 = "There are no new messages ";
     static final String INFO_STATEMENT_6 = "Exit!";
     static final String INFO_STATEMENT_7 = "LIST OF ALL USERS";
+
+    static final String PDF_STATEMENT_1 = "Certificate";
+    static final String PDF_STATEMENT_2 = "for";
+    static final String PDF_STATEMENT_3 = "Subject";
+    static final String PDF_STATEMENT_4 = "Grade";
+    static final String PDF_STATEMENT_5 = "Lodz";
+    static final String PDF_STATEMENT_6 = "Report of students who are going to fail promotion";
+    static final String PDF_STATEMENT_7 = "Fail because of too many absences";
+    static final String PDF_STATEMENT_8 = "Fail because of too low grades";
 
 }
