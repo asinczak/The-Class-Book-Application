@@ -14,7 +14,7 @@ public class GeneralMessages_en {
     static final String ENTER_DATA_7 = "Please enter the surname of TEACHER to assign :";
     static final String ENTER_DATA_8 = "Please enter the name of CLASS to assign student :";
     static final String ENTER_DATA_10 = "Enter the name of class" + "\nChoose one from these:" +
-            "\nGeneral, "+"Lingual, "+"Mathematical, "+"Natural-Scientific, "+"Sporting";
+            "\nGeneral, "+"Lingual, "+"Mathematical, "+"Natural scientific, "+"Sporting";
     static final String ENTER_DATA_11 = "Please enter the name of subject" + "\nChoose one from theses:"+
             "\nMaths, Science, Biology, Physics, Chemistry, Geography, History, Physical education, Art, Music, English";
 
@@ -85,6 +85,7 @@ public class GeneralMessages_en {
     static final String WORNING_STATEMENT_16 = "Error trying to enter password";
     static final String WORNING_STATEMENT_17 = "Error trying to generate document";
     static final String WORNING_STATEMENT_18 = "Student already has a grade from this subject";
+    static final String WORNING_STATEMENT_19 = "Student doesn't have grade from this subject";
 
 
 

@@ -1,4 +1,6 @@
 package pl.com.ttpsc.services;
+import org.apache.log4j.Logger;
+
 import java.sql.SQLException;
 import java.util.*;
 
@@ -14,6 +16,8 @@ public class MenuSettings {
         }
         return menuSettings;
     }
+
+    final static Logger logger = Logger.getLogger(MenuSettings.class);
 
     LogonService logonService = LogonService.getInstance();
 
@@ -93,6 +97,7 @@ public class MenuSettings {
         List <Integer> list = new ArrayList<>();
         list.add(10);
         list.add(27);
+        list.add(28);
         list.add(30);
         return list;
     }
@@ -147,6 +152,7 @@ public class MenuSettings {
     }
 
     public void displayMenuWithOptions() throws SQLException {
+        logger.debug("Displaying menu for user");
         getListOfMenuNumbers();
         for (Integer numberOptionMenu : mapWithOptionMenu.keySet()){
             String menuOption = mapWithOptionMenu.get(numberOptionMenu);
@@ -160,6 +166,7 @@ public class MenuSettings {
     }
 
     public int getOptionToDo (int numberFromUser) throws SQLException {
+        logger.info("Getting option to make");
         int optionTodo = 0;
 
         for (int indeks : mapWithMenuForLoggedUser.keySet()) {

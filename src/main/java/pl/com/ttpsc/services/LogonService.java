@@ -1,15 +1,13 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.SettingsAfterLogon;
 import pl.com.ttpsc.data.User;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
 
 public class LogonService {
 
@@ -24,6 +22,8 @@ public class LogonService {
         return logonService;
     }
 
+    final static Logger logger = Logger.getLogger(LogonService.class);
+
     SettingService settingService = SettingService.getInstance();
     UserService userService = UserService.getInstance();
     UserConverter userConverter = UserConverter.getInstance();
@@ -36,6 +36,7 @@ public class LogonService {
 
 
     public boolean checkingIfLogonIsCorrect (String login, String passwordFromUser) throws SQLException {
+        logger.debug("Checking if password format id correct");
         boolean checking = false;
         String passwordFromBase = getLoginAndPassword(login);
 
@@ -58,23 +59,28 @@ public class LogonService {
     }
 
     public boolean logging () throws SQLException {
-
+        logger.debug("Loggin");
         displayAllUsersAndLoginsWithPassswords();
         String loggingData = getDataToLogOn();
+        try {
+            if (loggingData.equalsIgnoreCase("x")) {
+                return false;
 
-                if (loggingData.equalsIgnoreCase("x")) {
-                    return false;
+            } else {
+                String[] tab = loggingData.split(" ");
+                String login = tab[0];
+                String password = tab[1];
 
-                } else {
-                    String[] tab = loggingData.split(" ");
-                    String login = tab[0];
-                    String password = tab[1];
+                setWhoIsLogged(login, password);
+                System.out.println(GeneralMessages_en.CORRECT_STATEMENT_3);
+                return true;
 
-                    setWhoIsLogged(login, password);
-                    System.out.println(GeneralMessages_en.CORRECT_STATEMENT_3);
-                    return true;
-
-                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_16);
+            logger.error(e.getMessage(), e);
+            return false;
+        }
     }
 
     public void updatePassword (int idUser, String newPassword) throws SQLException {
@@ -85,6 +91,7 @@ public class LogonService {
     }
 
     public void changingPasswordWithoutChecking () throws SQLException {
+        logger.debug("Changing password");
        boolean checking = true;
        do {
            String [] loggingData = getDataToChangeLoggingData();
@@ -122,6 +129,7 @@ public class LogonService {
     }
 
     public void changingPasswordWithChecking () throws SQLException {
+        logger.debug("Changing password");
         boolean checking = true;
         do {
             String [] loggingData = getDataToChangeLoggingData();
@@ -190,6 +198,7 @@ public class LogonService {
     }
 
     public String getDataToLogOn () throws SQLException {
+        logger.debug("Getting data to log on");
         String loggingData = "";
         boolean checking = true;
         do {
@@ -201,8 +210,8 @@ public class LogonService {
                     checking = false;
                     loggingData = login;
                 } else {
-                System.out.println(GeneralMessages_en.ENTER_DATA_18);
-                String password = scanner.nextLine();
+                    System.out.println(GeneralMessages_en.ENTER_DATA_18);
+                    String password = scanner.nextLine();
 //                    String password = getPasswordFromUser(GeneralMessages_en.ENTER_DATA_18);
 
                     if (checkingIfLogonIsCorrect(login, password)) {

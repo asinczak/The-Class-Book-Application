@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import org.apache.log4j.Logger;
 
 public class MenuService {
 
@@ -22,6 +23,8 @@ public class MenuService {
         }
         return menuServisce;
     }
+
+    final static Logger logger = Logger.getLogger(MenuService.class);
 
 
     DisplayService displayService = DisplayService.getInstance();
@@ -40,9 +43,10 @@ public class MenuService {
     boolean switchGoes = true;
 
     public void mainMenu() {
-
+        logger.info("Starting menu");
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:Users.db");
+            logger.info("Getting connection with data base");
             if(logonService.logging()) {
 
                 do {
@@ -143,6 +147,7 @@ public class MenuService {
                             case 30:
                                 mainMenu();
                                 switchGoes = false;
+                                logger.info("Closing connection with data base");
                                 connection.close();
                                 break;
                             default:
@@ -158,16 +163,17 @@ public class MenuService {
                 System.out.println(GeneralMessages_en.CORRECT_STATEMENT_6);
             }
         } catch (SQLException e) {
-            System.out.println(GeneralMessages_en.WORNING_STATEMENT_15);;
-        }
-    catch (FileNotFoundException e){
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_15);
+            logger.error(e.getMessage(), e);
+        } catch (FileNotFoundException e){
         System.out.println(GeneralMessages_en.WORNING_STATEMENT_17);
-    }
-    catch (DocumentException e){
+        logger.error(e.getMessage(), e);
+    } catch (DocumentException e){
         System.out.println(GeneralMessages_en.WORNING_STATEMENT_17);
-        }
-        catch (IOException e){
+        logger.error(e.getMessage(), e);
+        } catch (IOException e){
             System.out.println(GeneralMessages_en.WORNING_STATEMENT_17);
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -202,6 +208,7 @@ public class MenuService {
                 loop = false;
             } catch (InputMismatchException e) {
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
                 sc.next();
             }
         }

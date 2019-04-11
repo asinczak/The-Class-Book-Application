@@ -1,11 +1,13 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.Roles;
 import pl.com.ttpsc.data.SchoolClass;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
 
 public class TeacherService {
 
@@ -20,6 +22,8 @@ public class TeacherService {
         return teacherService;
     }
 
+    final static Logger logger = Logger.getLogger(TeacherService.class);
+
     ClassService classService = ClassService.getInstance();
     UserService userService = UserService.getInstance();
     ExcusesService excusesService =ExcusesService.getInstance();
@@ -30,6 +34,7 @@ public class TeacherService {
     static final String GET_TEACHER_FROM_ID = "SELECT Name, Surname FROM Users WHERE Id = ?";
 
     public void createTeacher () throws SQLException {
+        logger.debug("Creating teacher");
         String enteredData = userService.getNameAndSurnameFromUser();
             if (enteredData.equalsIgnoreCase("x")){
                 System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
@@ -46,6 +51,7 @@ public class TeacherService {
         }
 
     public void makeNewAssigmentToClassForTeacher() throws SQLException {
+        logger.debug("Making assignment to class for teacher");
         String nameAndSurname = getNameAndSurnameAndCheckForTeacher();
         if (nameAndSurname.equalsIgnoreCase("x")){
             System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
@@ -123,37 +129,45 @@ public class TeacherService {
     }
 
     public void manageExcusesFromGuardian() throws SQLException {
+        logger.debug("Displaying menu with option to manage excuses from guardian");
         int idTeacher = logonService.getIdUserWhoHasLogged();
         boolean checking = true;
         do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_32);
-            int number = scanner.nextInt();
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_32);
+                int number = scanner.nextInt();
 
-            switch (number) {
-                case 1:
-                    displayNewExcuses(idTeacher);
-                    break;
-                case 2:
-                   displayAllMessagesFromExcuses(idTeacher);
-                    break;
-                case 3:
-                    deleteChosenExcuse(idTeacher);
-                    break;
-                case 4:
-                    checking = false;
-                default:
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                switch (number) {
+                    case 1:
+                        displayNewExcuses(idTeacher);
+                        break;
+                    case 2:
+                        displayAllMessagesFromExcuses(idTeacher);
+                        break;
+                    case 3:
+                        deleteChosenExcuse(idTeacher);
+                        break;
+                    case 4:
+                        checking = false;
+                    default:
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                }
+            }catch (InputMismatchException e){
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
         } while (checking);
 
     }
 
     public void verifyStudentsAbsence() throws SQLException {
+        logger.debug("Verifying students absences");
         int idTeacher = logonService.getIdUserWhoHasLogged();
         displayAllMessagesFromExcuses(idTeacher);
         boolean checking = true;
         do {
+            try{
             Scanner scanner = new Scanner(System.in);
             System.out.println(GeneralMessages_en.ENTER_DATA_27);
             int number = scanner.nextInt();
@@ -173,10 +187,15 @@ public class TeacherService {
                 default:
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
             }
+        }catch (InputMismatchException e){
+            System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
+        }
         } while (checking);
     }
 
     private void discardStudentsAbsence(int idTeacher) throws SQLException {
+        logger.debug("Discarding student's absence");
         displayAllMessagesFromExcuses(idTeacher);
         boolean checking = true;
        do {
@@ -201,6 +220,7 @@ public class TeacherService {
     }
 
     private void approveStudentsAbsence(int idTeacher) throws SQLException {
+        logger.debug("Approving student's absence");
         displayAllMessagesFromExcuses(idTeacher);
         boolean checking = true;
         do {
@@ -311,6 +331,7 @@ public class TeacherService {
     }
 
     public String getNameAndSurnameAndCheckForTeacher () throws SQLException {
+        logger.debug("Getting teacher's name and surname");
         boolean checking = true;
         String returnData = "";
 
@@ -346,6 +367,7 @@ public class TeacherService {
 
             }catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
         } while (checking) ;
         return returnData;
@@ -363,7 +385,7 @@ public class TeacherService {
             if (idClass > 0) {
                 checking = false;
             } else {
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_5);
             }
         }while (checking) ;
         return className;

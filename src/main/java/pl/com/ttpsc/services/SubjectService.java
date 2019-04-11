@@ -1,10 +1,12 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.Subject;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SubjectService {
@@ -19,6 +21,8 @@ public class SubjectService {
         }
         return subjectService;
     }
+
+    final static Logger logger = Logger.getLogger(SubjectService.class);
 
     static final String GET_ID_FROM_SUBJECTS = "SELECT Id FROM Subjects WHERE SubjectName = ?";
     static final String INSERT_ABSENCE_FROM_SUBJECT = "INSERT INTO Absences (DateAbsence, IdStudent, IdSubject) " +
@@ -54,6 +58,7 @@ public class SubjectService {
     }
 
     public void setNumberOfLessonsPerYear () throws SQLException {
+        logger.debug("Setting number of lesson per year");
         String [] data = getDatatoSetNumberOfLessons();
         if (data[0].equalsIgnoreCase("x")){
             System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
@@ -124,27 +129,32 @@ public class SubjectService {
         String [] data = new String[1];
         boolean checking = true;
         do{
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_11);
-            String subject = scanner.nextLine();
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_11);
+                String subject = scanner.nextLine();
 
-            if(subject.equalsIgnoreCase("x")){
-                checking = false;
-                data[0] = subject;
-            } else {
-
-                System.out.println(GeneralMessages_en.ENTER_DATA_16);
-                int numberOfLessons = scanner.nextInt();
-
-                int idSubject = getIdFromSubject(subject);
-                if (idSubject > 0) {
-                    data = new String[2];
-                    data [0] = subject;
-                    data [1] = String.valueOf(numberOfLessons);
+                if (subject.equalsIgnoreCase("x")) {
                     checking = false;
+                    data[0] = subject;
                 } else {
-                    System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+
+                    System.out.println(GeneralMessages_en.ENTER_DATA_16);
+                    int numberOfLessons = scanner.nextInt();
+
+                    int idSubject = getIdFromSubject(subject);
+                    if (idSubject > 0) {
+                        data = new String[2];
+                        data[0] = subject;
+                        data[1] = String.valueOf(numberOfLessons);
+                        checking = false;
+                    } else {
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_7);
+                    }
                 }
+            }catch (InputMismatchException e){
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
 
         }while (checking);

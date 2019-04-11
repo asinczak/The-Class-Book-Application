@@ -1,9 +1,12 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+
 
 public class SettingService {
 
@@ -18,11 +21,14 @@ public class SettingService {
         return settingService;
     }
 
+    final static Logger logger = Logger.getLogger(SettingService.class);
+
     static final String UPDATE_SETTINGS = "UPDATE Settings SET Value = ? WHERE Key = ?";
     static final String SELECT_VALUE_FROM_SETTINGS = "SELECT Value FROM Settings WHERE Key = ?";
     final String KEY_SETTINGS_1 = "CheckingFormat";
 
     public void turnOnOffCheckingPassword () throws SQLException {
+       logger.debug("Changing option with checking password");
         boolean checking = true;
         do {
             Scanner scanner = new Scanner(System.in);

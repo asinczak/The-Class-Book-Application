@@ -1,5 +1,6 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.Guardian;
 import pl.com.ttpsc.data.Roles;
 import pl.com.ttpsc.data.Student;
@@ -24,6 +25,8 @@ public class GuardianService {
         return guardianService;
     }
 
+    final static Logger logger = Logger.getLogger(GuardianService.class);
+
     static final String INSERT_GUARDIAN_TO_STUDENT = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
     static final String ASSIGN_STUDENT_TO_GUARDIAN = "UPDATE Users SET IdGuardian = ? WHERE Name = ? AND Surname = ?";
     static final String SELECT_STUDENT_ASSSIGN_TO_GUARDIAN = "SELECT Name, Surname FROM Users WHERE IdGuardian = ?";
@@ -42,7 +45,7 @@ public class GuardianService {
    String surnameStudent = "";
 
     public void createGuardian () throws SQLException {
-
+        logger.debug("Creating guardian");
         String enteredDataForGuardian = userService.getNameAndSurnameFromUser();
         String eneterdDataForStudent = studentService.getNameAndSurnameAndCheckForStudent();
 
@@ -87,6 +90,7 @@ public class GuardianService {
     }
 
     public void asignStudentToGuardian () throws SQLException {
+        logger.debug("Assigning student to the guardian");
         String enteredDataForGuardian = getNameAndSurnameForGuardian();
         String eneterdDataForStudent = studentService.getNameAndSurnameAndCheckForStudent();
 
@@ -143,6 +147,7 @@ public class GuardianService {
     }
 
     public void sendAnExcuseToTeacher () throws SQLException {
+        logger.debug("Sending excuse to teacher");
         String enteredDataForTeacher = teacherService.getNameAndSurnameAndCheckForTeacher();
 
         if(enteredDataForTeacher.equalsIgnoreCase("x")){
@@ -161,6 +166,7 @@ public class GuardianService {
     }
 
     public String getNameAndSurnameForGuardian () throws SQLException {
+        logger.debug("Getting guardian's name and surname");
         boolean checking = true;
         String returnData = "";
 
@@ -183,7 +189,7 @@ public class GuardianService {
                     surname = surname.substring(0, 1).toUpperCase() + surname.substring(1).toLowerCase();
 
                     if (userService.checkingIfUserExists(name, surname)) {
-                        if(checkingIfIsGuardian(name,surname)) {
+                        if (checkingIfIsGuardian(name, surname)) {
                             checking = false;
                             returnData = "" + name + " " + surname;
                         } else {
@@ -196,7 +202,9 @@ public class GuardianService {
 
             }catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
+
         } while (checking) ;
         return returnData;
     }

@@ -1,5 +1,6 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.Roles;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,8 @@ public class UserService {
         }
         return userService;
     }
+
+    final static Logger logger = Logger.getLogger(UserService.class);
 
     static final String INSERT_USER = "INSERT INTO Users (Name, Surname, IdRole) VALUES (?, ?, ?)";
     static final String GET_ID_ROLE_FROM_ROLES = "SELECT Id FROM Roles WHERE RoleName = ?";
@@ -81,6 +84,7 @@ public class UserService {
     }
 
     public boolean checkingIfUserExists (String name, String surname) throws SQLException {
+        logger.debug("Checking if user exists");
         boolean checking = false;
         String nameFromDataBase = "";
         String surnameFromDataBase = "";
@@ -155,6 +159,7 @@ public class UserService {
     }
 
     public String getNameAndSurnameFromUser () throws SQLException {
+        logger.debug("Getting name and surname to create user");
         boolean checking = true;
         String returnData = "";
         do {
@@ -183,6 +188,7 @@ public class UserService {
                 }
             } catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
         }while (checking);
 

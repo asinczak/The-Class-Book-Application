@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.Student;
 
 import java.io.FileOutputStream;
@@ -27,6 +28,8 @@ public class PDFservice {
         }
         return pdfService;
     }
+
+    final static Logger logger = Logger.getLogger(PDFservice.class);
 
     UserService userService = UserService.getInstance();
     StudentService studentService = StudentService.getInstance();
@@ -108,6 +111,7 @@ public class PDFservice {
     }
 
     public void generateStudentCertificate() throws SQLException, IOException, DocumentException {
+        logger.debug("Generating student's certificate");
         STUDENT_CERTIFICATE = "Student.certificate.pdf";
         String enteredData = studentService.getNameAndSurnameAndCheckForStudent();
         if (enteredData.equalsIgnoreCase("x")){
@@ -135,6 +139,7 @@ public class PDFservice {
     }
 
     public void generateCertificatesForAllStudentsInClass () throws SQLException, IOException, DocumentException {
+        logger.debug("Generating certificates for all students in class");
         int index = 0;
         String className = teacherService.getClassName();
         int idClass = classService.getIdFromClasses(className);
@@ -159,6 +164,7 @@ public class PDFservice {
     }
 
     public void generateCertificatesForChosenStudents () throws DocumentException, SQLException, IOException {
+        logger.debug("Generating certificates for chosen students");
         int index = 0;
         List<String> list = getListOfStudentsToGenerateCertificates();
         for (String students : list){
@@ -172,6 +178,7 @@ public class PDFservice {
     }
 
     public void createReportForStudentsWhoWillFail () throws IOException, DocumentException, SQLException {
+        logger.debug("Creating report for student who will fail");
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(REPORT));
         document.open();

@@ -1,5 +1,6 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.SchoolClass;
 import pl.com.ttpsc.data.Student;
 import pl.com.ttpsc.data.User;
@@ -7,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
 
 public class DisplayService {
 
@@ -22,6 +24,8 @@ public class DisplayService {
         return displayService;
     }
 
+    final static Logger logger = Logger.getLogger(DisplayService.class);
+
     StudentService studentService = StudentService.getInstance();
     SubjectService subjectService = SubjectService.getInstance();
     ClassService classService = ClassService.getInstance();
@@ -34,6 +38,7 @@ public class DisplayService {
 
 
     public void displayAllGradesOfStudentForStudent() throws SQLException {
+        logger.debug("Displaying all grades for student");
         int idStudent = logonService.getIdUserWhoHasLogged();
             ResultSet resultSet = studentService.getAllGradesOfStudent(idStudent);
             while (resultSet.next()) {
@@ -45,6 +50,7 @@ public class DisplayService {
     }
 
     public void displayAllStudentAbsencesForStudent() throws SQLException {
+        logger.debug("Displaying all absences for student");
         int idStudent = logonService.getIdUserWhoHasLogged();
 
             ResultSet resultSet = studentService.getAllStudentAbsences(idStudent);
@@ -57,11 +63,13 @@ public class DisplayService {
     }
 
     public void displayAllUsers() throws SQLException {
+        logger.debug("Displaying all users");
         List<User> list = userConverter.convert();
         System.out.println(list);
     }
 
     public void displayAllTeachers() throws SQLException {
+        logger.debug("Displaying all teachers");
             List<User> list = userConverter.convert();
             list.forEach(user -> {
                 if (user.getWhoIs().equals("TEACHER")) {
@@ -71,7 +79,7 @@ public class DisplayService {
     }
 
     public void displayAllClassesAtSchool() throws SQLException {
-
+        logger.debug("Displaying all classes at school");
         List<SchoolClass> list = teacherService.getListClassWithTeacher();
         for (int i = 0; i < list.size(); i++) {
             String className = list.get(i).getNameClass();
@@ -85,6 +93,7 @@ public class DisplayService {
     }
 
     public void displayAllGradesOfStudentForGuardian() throws SQLException {
+        logger.debug("Displaying all grades for guardian");
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -106,6 +115,7 @@ public class DisplayService {
     }
 
     public void displayAllAbsencesOfStudentForGuardian() throws SQLException {
+        logger.debug("Displaying all absences for guardian");
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -126,6 +136,7 @@ public class DisplayService {
     }
 
     public void displayStudentsWithTooLowGrades() throws SQLException {
+        logger.debug("Displaying students with too low grades");
         int idGuardian = logonService.getIdUserWhoHasLogged();
 
             List<Student> studentList = guardianService.getListOfStudents(idGuardian);
@@ -149,6 +160,7 @@ public class DisplayService {
     }
 
     public void displayIfStudentsHaveTooManyAbsences() throws SQLException {
+        logger.debug("Displaying students with too many absences");
         boolean checking = true;
         int idGuardian = logonService.getIdUserWhoHasLogged();
 

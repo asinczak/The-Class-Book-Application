@@ -3,7 +3,9 @@ package pl.com.ttpsc.services;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import org.apache.log4j.Logger;
 
 public class MessagesService {
 
@@ -17,6 +19,8 @@ public class MessagesService {
         }
         return messagesService;
     }
+
+    final static Logger logger = Logger.getLogger(MessagesService.class);
 
     UserService userService = UserService.getInstance();
     LogonService logonService = LogonService.getInstance();
@@ -48,33 +52,39 @@ public class MessagesService {
     }
 
     public void manageMessages () throws SQLException {
+        logger.debug("Displaying menu with options to manage menu");
         boolean switchGoes = true;
 
         do {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_34);
-            int number = scanner.nextInt();
-        switch (number) {
-            case 1:
-                sendTheMessage();
-                break;
-            case 2:
-                replayTheMessage();
-                break;
-            case 3:
-                deleteTheMessage();
-                break;
-            case 4:
-                displayNewMessages();
-                break;
-            case 5:
-                displayAllMessages();
-                break;
-            case 6:
-                switchGoes = false;
-                break;
-            default:
+            try {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println(GeneralMessages_en.ENTER_DATA_34);
+                int number = scanner.nextInt();
+                switch (number) {
+                    case 1:
+                        sendTheMessage();
+                        break;
+                    case 2:
+                        replayTheMessage();
+                        break;
+                    case 3:
+                        deleteTheMessage();
+                        break;
+                    case 4:
+                        displayNewMessages();
+                        break;
+                    case 5:
+                        displayAllMessages();
+                        break;
+                    case 6:
+                        switchGoes = false;
+                        break;
+                    default:
+                        System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                }
+            }catch (InputMismatchException e){
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
         }while (switchGoes);
     }

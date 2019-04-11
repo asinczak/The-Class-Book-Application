@@ -1,5 +1,6 @@
 package pl.com.ttpsc.services;
 
+import org.apache.log4j.Logger;
 import pl.com.ttpsc.data.Roles;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +8,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+
 
 public class StudentService {
 
@@ -20,6 +23,8 @@ public class StudentService {
         }
         return studentService;
     }
+
+    final static Logger logger = Logger.getLogger(StudentService.class);
 
     SubjectService subjectService = SubjectService.getInstance();
     ClassService classService = ClassService.getInstance();
@@ -35,6 +40,7 @@ public class StudentService {
 
 
     public void createNewStudent() throws SQLException {
+        logger.debug("Creating student");
             String enteredData = userService.getNameAndSurnameFromUser();
             if (enteredData.equalsIgnoreCase("x")){
                 System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
@@ -51,22 +57,22 @@ public class StudentService {
     }
 
     public void asignStudentToClass() throws SQLException {
-        String [] tab = getDataToAssignStudentToClass();
+        logger.debug("Assigning student to class");
+        String enteredData = getNameAndSurnameAndCheckForStudent();
+        String className = getClassToAssignStudent();
 
-        if(tab[0].equalsIgnoreCase("x")){
+        if(enteredData.equalsIgnoreCase("x")){
             System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
         } else {
-            String nameAndSurname = tab[0];
-            String className = tab[1];
+
             int idClass = classService.getIdFromClasses(className);
-            String[] tabWithNameAndSurname = nameAndSurname.split(" ");
+            String[] tabWithNameAndSurname = enteredData.split(" ");
             String studentName = tabWithNameAndSurname[0];
             String studentSurname = tabWithNameAndSurname[1];
 
             updateStudentAddClassId(idClass, studentName, studentSurname);
             System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
         }
-
     }
 
     public void updateStudentAddClassId (int idClass, String name, String surname) throws SQLException {
@@ -78,9 +84,10 @@ public class StudentService {
     }
 
     public void addStudentGrade () throws SQLException {
+        logger.debug("Adding student a grade");
         String[] tab = getDataToAddStudentGrade();
 
-        if(tab[0].equalsIgnoreCase("x") || tab[3].equalsIgnoreCase("987654")){
+        if(tab[0].equalsIgnoreCase("x")){
             System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
         } else {
             String name = tab[0];
@@ -89,9 +96,13 @@ public class StudentService {
             String grade = tab[3];
             int idSubject = subjectService.getIdFromSubject(subject);
             int idStudent = userService.getIdFromUser(name, surname);
-            int gradeAsInt = Integer.parseInt(grade);
-            insertGradeToStudent(idSubject, idStudent, gradeAsInt);
-            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+            if (checkingIfStudenthasSuchGrade(idStudent, idSubject)){
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_18);
+            } else {
+                int gradeAsInt = Integer.parseInt(grade);
+                insertGradeToStudent(idSubject, idStudent, gradeAsInt);
+                System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+            }
         }
     }
 
@@ -104,6 +115,7 @@ public class StudentService {
     }
 
     public void changeGradeFromSubject () throws SQLException {
+        logger.debug("Changing grade from subject");
         String[] tab = getDataToAddStudentGrade();
 
         if(tab[0].equalsIgnoreCase("x")){
@@ -116,8 +128,12 @@ public class StudentService {
             int idSubject = subjectService.getIdFromSubject(subject);
             int idStudent = userService.getIdFromUser(name, surname);
             int gradeAsInt = Integer.parseInt(grade);
-            updateStudentGrade(gradeAsInt, idSubject, idStudent);
-            System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+            if (!checkingIfStudenthasSuchGrade(idStudent, idSubject)){
+                System.out.println(GeneralMessages_en.WORNING_STATEMENT_19);
+            } else {
+                updateStudentGrade(gradeAsInt, idSubject, idStudent);
+                System.out.println(GeneralMessages_en.CORRECT_STATEMNET_5);
+            }
         }
     }
 
@@ -182,6 +198,7 @@ public class StudentService {
     }
 
     public void addAbsenceToStudent() throws SQLException {
+        logger.debug("Adding student an absence");
         String[] tab = getDataToAddAbsence();
 
         if(tab[0].equalsIgnoreCase("x")){
@@ -195,7 +212,7 @@ public class StudentService {
         }
     }
 
-    public  boolean checkingIfStudenthasSuchGrade (int idStudent, int grade, int idSubject) throws SQLException {
+    public  boolean checkingIfStudenthasSuchGrade (int idStudent, int idSubject) throws SQLException {
         boolean checking = false;
         PreparedStatement preparedStatement = MenuService.getInstance().connection.prepareStatement(SELECT_SUBJECT_AND_GRADE_FOR_STUDENT);
         preparedStatement.setInt(1, idStudent);
@@ -212,6 +229,7 @@ public class StudentService {
     }
 
     public Map<String, Integer> getMapOfAbsencesOfStudent (int idStudent) throws SQLException {
+        logger.debug("Getting map with absences");
         Map <String, Integer> map = new HashMap<>();
         List <String> subjectList = new ArrayList<>();
 
@@ -261,6 +279,7 @@ public class StudentService {
             }
             } catch (ParseException e) {
                 System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
             }
         }while (true);
     }
@@ -274,35 +293,22 @@ public class StudentService {
         return comparison;
     }
 
-    public String [] getDataToAssignStudentToClass () throws SQLException {
-        String[] tab = new String[1];
-        String enteredData = getNameAndSurnameAndCheckForStudent();
-        if (enteredData.equalsIgnoreCase("x")) {
-            tab[0] = enteredData;
-        } else {
-            tab = getClassToAssignStudent(enteredData);
-        }
-        return tab;
-        }
-
-        public String [] getClassToAssignStudent (String enteredData) throws SQLException {
+        public String getClassToAssignStudent () throws SQLException {
             boolean checking = true;
-            String[] tab = new String[1];
+            String className = "";
             do {
                 Scanner scanner = new Scanner(System.in);
                 System.out.println(GeneralMessages_en.ENTER_DATA_10);
-                String className = scanner.nextLine();
+                 className = scanner.nextLine();
                 int idClass = classService.getIdFromClasses(className);
                 if (idClass > 0) {
-                    tab[0] = enteredData;
-                    tab[1] = className;
                     checking = false;
 
                 } else {
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_5);
                 }
             } while (checking);
-            return tab;
+            return className;
         }
 
     public String getNameAndSurnameAndCheckForStudent () throws SQLException {
@@ -341,6 +347,7 @@ public class StudentService {
 
                 }catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                    logger.error(e.getMessage(), e);
                 }
             } while (checking) ;
         return returnData;
@@ -397,11 +404,8 @@ public class StudentService {
             Scanner scanner = new Scanner(System.in);
             System.out.println(GeneralMessages_en.ENTER_DATA_12);
             grade = scanner.nextInt();
-            if (checkingIfStudenthasSuchGrade(idStudent, grade, idSubject)){
-                checking = false;
-                System.out.println(GeneralMessages_en.WORNING_STATEMENT_18);
-                grade = 987654;
-            }else if (grade > 0 & grade < 7){
+
+             if (grade > 0 & grade < 7){
                 checking = false;
 
             } else {
@@ -409,6 +413,7 @@ public class StudentService {
             }
         } catch (InputMismatchException e) {
             System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                logger.error(e.getMessage(), e);
         }
 
         } while (checking);
