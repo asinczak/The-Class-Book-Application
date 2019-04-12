@@ -164,34 +164,39 @@ public class TeacherService {
     public void verifyStudentsAbsence() throws SQLException {
         logger.debug("Verifying students absences");
         int idTeacher = logonService.getIdUserWhoHasLogged();
-        displayAllMessagesFromExcuses(idTeacher);
-        boolean checking = true;
-        do {
-            try{
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(GeneralMessages_en.ENTER_DATA_27);
-            int number = scanner.nextInt();
 
-            switch (number) {
-                case 1:
-                    approveStudentsAbsence(idTeacher);
-                    checking = false;
-                    break;
-                case 2:
-                    discardStudentsAbsence(idTeacher);
-                    checking = false;
-                    break;
-                case 3:
-                    checking = false;
-                    break;
-                default:
+        if (!displayAllMessagesFromExcuses(idTeacher)){
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_8);
+            System.out.println(GeneralMessages_en.INFO_STATEMENT_6);
+        } else {
+            boolean checking = true;
+            do {
+                try {
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.println(GeneralMessages_en.ENTER_DATA_27);
+                    int number = scanner.nextInt();
+
+                    switch (number) {
+                        case 1:
+                            approveStudentsAbsence(idTeacher);
+                            checking = false;
+                            break;
+                        case 2:
+                            discardStudentsAbsence(idTeacher);
+                            checking = false;
+                            break;
+                        case 3:
+                            checking = false;
+                            break;
+                        default:
+                            System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
+                    }
+                } catch (InputMismatchException e) {
                     System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
-            }
-        }catch (InputMismatchException e){
-            System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
-                logger.error(e.getMessage(), e);
+                    logger.error(e.getMessage(), e);
+                }
+            } while (checking);
         }
-        } while (checking);
     }
 
     private void discardStudentsAbsence(int idTeacher) throws SQLException {
@@ -216,7 +221,6 @@ public class TeacherService {
                System.out.println(GeneralMessages_en.WORNING_STATEMENT_3);
            }
        } while (checking);
-
     }
 
     private void approveStudentsAbsence(int idTeacher) throws SQLException {
@@ -265,28 +269,33 @@ public class TeacherService {
         } while (checking);
     }
 
-    public void displayAllMessagesFromExcuses (int idTeacher) throws SQLException {
+    public boolean displayAllMessagesFromExcuses (int idTeacher) throws SQLException {
+        boolean checkingIfTeacherHasAnyExcuses = false;
         ResultSet resultSet = excusesService.getAllMessagesFromExcuses(idTeacher);
-        while (resultSet.next()){
-            int id = resultSet.getInt("Id");
-            String excuse = resultSet.getString("Message");
-            String status = resultSet.getString("Status");
-            int idGuardian = resultSet.getInt("IdGuardian");
-            String guardian = userService.getUserNameSurnameFromId(idGuardian);
-            String displayNew = "";
-            System.out.println(GeneralMessages_en.INFO_STATEMENT_1);
-            if (status.equals("NEW")){
-                displayNew = "###### " +status +" ######";
-                System.out.println("Message number: "+ id+ "\nFrom: "+guardian+
-                        "\nMessage: "+ excuse+ "\nStatus:" +displayNew+
-                        "\n___________________________________________");
-            } else {
 
-                System.out.println("Message number: " + id +"\nFrom: "+guardian+
-                        "\nMessage: " + excuse + "\nStatus:" + status +
-                        "\n___________________________________________");
-            }
+            while (resultSet.next()) {
+                int id = resultSet.getInt("Id");
+                String excuse = resultSet.getString("Message");
+                String status = resultSet.getString("Status");
+                int idGuardian = resultSet.getInt("IdGuardian");
+                if (idGuardian > 0) {
+                    checkingIfTeacherHasAnyExcuses = true;
+                    String guardian = userService.getUserNameSurnameFromId(idGuardian);
+                    String displayNew = "";
+                    System.out.println(GeneralMessages_en.INFO_STATEMENT_1);
+                    if (status.equals("NEW")) {
+                        displayNew = "###### " + status + " ######";
+                        System.out.println("Message number: " + id + "\nFrom: " + guardian +
+                                "\nMessage: " + excuse + "\nStatus:" + displayNew +
+                                "\n___________________________________________");
+                    } else {
+                        System.out.println("Message number: " + id + "\nFrom: " + guardian +
+                                "\nMessage: " + excuse + "\nStatus:" + status +
+                                "\n___________________________________________");
+                    }
+                }
         }
+             return checkingIfTeacherHasAnyExcuses;
     }
 
     public void displayNewExcuses (int idTeacher) throws SQLException {
